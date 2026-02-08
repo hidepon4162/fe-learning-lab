@@ -1,0 +1,205 @@
+[
+    {
+        "id": "cond-001",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "比較",
+            "AND"
+        ],
+        "difficulty": 1,
+        "question": "次の式が true になるのはどれ？（int x = 5; int y = 10;）",
+        "expr": "x < y && x == 5",
+        "choices": [
+            "true",
+            "false",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "x が y より小さく、かつ x が 5 と等しい",
+        "hint": "&& は「両方true」"
+    },
+    {
+        "id": "cond-002",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "比較",
+            "OR"
+        ],
+        "difficulty": 1,
+        "question": "次の式が true になるのはどれ？（int a = 0;）",
+        "expr": "a == 0 || a > 10",
+        "choices": [
+            "true",
+            "false",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "a が 0 と等しい、または a が 10 より大きい"
+    },
+    {
+        "id": "cond-003",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "境界値",
+            ">=<="
+        ],
+        "difficulty": 1,
+        "question": "次の式が true になるのはどれ？（int score = 60;）",
+        "expr": "score >= 60",
+        "choices": [
+            "true",
+            "false",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "score が 60 以上"
+    },
+    {
+        "id": "cond-004",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "否定",
+            "!"
+        ],
+        "difficulty": 2,
+        "question": "次の式の評価結果として正しいものはどれ？（bool ok = false;）",
+        "expr": "!ok",
+        "choices": [
+            "true",
+            "false",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "ok が false なので、それを否定して true"
+    },
+    {
+        "id": "cond-005",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "優先順位"
+        ],
+        "difficulty": 2,
+        "question": "次の式の評価結果として正しいものはどれ？（bool a = true; bool b = false; bool c = true;）",
+        "expr": "a || b && c",
+        "choices": [
+            "true",
+            "false",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "&& が先に評価される。b && c は false。a || false で true。",
+        "hint": "&& は || より優先順位が高い"
+    },
+    {
+        "id": "cond-006",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "括弧",
+            "優先順位"
+        ],
+        "difficulty": 2,
+        "question": "次の式の評価結果として正しいものはどれ？（bool a = true; bool b = false; bool c = true;）",
+        "expr": "(a || b) && c",
+        "choices": [
+            "true",
+            "false",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "括弧内が先。a||b は true。true && c で true。"
+    },
+    {
+        "id": "cond-007",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "短絡評価"
+        ],
+        "difficulty": 2,
+        "question": "次の式の評価として正しいものはどれ？（int x = 0;）",
+        "expr": "x != 0 && (10 / x) > 1",
+        "choices": [
+            "false（例外は起きない）",
+            "true（例外は起きない）",
+            "実行時エラー（0除算）",
+            "コンパイルエラー"
+        ],
+        "answer": 0,
+        "jp": "左が false なので && の右は評価されず、0除算が起きない",
+        "hint": "&& は左が false なら右を見ない"
+    },
+    {
+        "id": "cond-008",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "短絡評価"
+        ],
+        "difficulty": 2,
+        "question": "次の式の評価として正しいものはどれ？（int x = 0;）",
+        "expr": "x == 0 || (10 / x) > 1",
+        "choices": [
+            "true（例外は起きない）",
+            "false（例外は起きない）",
+            "実行時エラー（0除算）",
+            "コンパイルエラー"
+        ],
+        "answer": 0,
+        "jp": "左が true なので || の右は評価されず、0除算が起きない",
+        "hint": "|| は左が true なら右を見ない"
+    },
+    {
+        "id": "cond-009",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "文字",
+            "比較"
+        ],
+        "difficulty": 3,
+        "question": "次の式の評価結果として正しいものはどれ？（char ch = 'A';）",
+        "expr": "ch >= 'A' && ch <= 'Z'",
+        "choices": [
+            "true",
+            "false",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "ch が 'A'〜'Z' の範囲（英大文字）に入る",
+        "hint": "char も大小比較できる（文字コード順）"
+    },
+    {
+        "id": "cond-010",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "bool",
+            "比較"
+        ],
+        "difficulty": 3,
+        "question": "次の式の評価結果として正しいものはどれ？（bool p = true; bool q = true;）",
+        "expr": "p == q",
+        "choices": [
+            "true",
+            "false",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "bool 同士の == は「同じ値か」",
+        "hint": "true == true は true"
+    }
+]

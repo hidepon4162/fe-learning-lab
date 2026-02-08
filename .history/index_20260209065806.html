@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>FE Classroom Quiz</title>
+    <style>
+        :root {
+            --bg: #0b1220;
+            --card: #111a2e;
+            --line: #23314f;
+            --text: #e7eefc;
+            --muted: #b7c4e4;
+            --accent: #7aa2ff;
+            --ok: #21c77a;
+            --ng: #ff5a70;
+            --warn: #ffd166;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", sans-serif;
+            background: linear-gradient(180deg, var(--bg), #070b14);
+            color: var(--text);
+        }
+
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 18px;
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            background: rgba(17, 26, 46, .8);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            position: sticky;
+            top: 10px;
+            backdrop-filter: blur(8px);
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: .2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            display: none;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(255, 209, 102, .15);
+            border: 1px solid rgba(255, 209, 102, .35);
+            color: var(--warn);
+        }
+
+        .meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(122, 162, 255, .12);
+            border: 1px solid rgba(122, 162, 255, .25);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .panel {
+            background: rgba(17, 26, 46, .75);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .row>* {
+            flex: 0 0 auto;
+        }
+
+        .small {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .k {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .hr {
+            height: 1px;
+            background: var(--line);
+            margin: 12px 0;
+            opacity: .7;
+        }
+
+        button,
+        select,
+        input,
+        textarea {
+            background: #0c1326;
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        button:hover {
+            border-color: rgba(122, 162, 255, .55);
+        }
+
+        button:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            resize: vertical;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Noto Sans JP", monospace;
+            font-size: 12px;
+        }
+
+        .toggleBtn {
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+
+        .presetBtn {
+            padding: 8px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+        }
+
+        .checkgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 8px 12px;
+        }
+
+        label {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .choice {
+            margin: 10px 0;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 12px;
+        }
+
+        .choice:hover {
+            border-color: rgba(122, 162, 255, .40);
+        }
+
+        pre.code {
+            background: rgba(9, 13, 26, .9);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 12px;
+            padding: 12px;
+            overflow: auto;
+        }
+
+        pre.code code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Noto Sans JP", monospace;
+            font-size: 12px;
+            color: #eaf0ff;
+            white-space: pre;
+        }
+
+        .result-item {
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 14px;
+            padding: 14px;
+            background: rgba(12, 19, 38, .55);
+        }
+
+        .result-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            color: var(--muted);
+            background: rgba(255, 255, 255, .04);
+        }
+
+        .tag.ok {
+            color: var(--ok);
+            border-color: rgba(33, 199, 122, .35);
+            background: rgba(33, 199, 122, .10);
+        }
+
+        .tag.ng {
+            color: var(--ng);
+            border-color: rgba(255, 90, 112, .35);
+            background: rgba(255, 90, 112, .10);
+        }
+
+        .jp {
+            margin: 10px 0;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, .16);
+            color: #d7e3ff;
+        }
+
+        .note {
+            display: none;
+            margin-top: 8px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 209, 102, .35);
+            background: rgba(255, 209, 102, .10);
+            color: #ffe7a8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="top">
+<div class="title">
+    基本情報 技術者試験 演習クイズ
+    <span id="lockBadge" class="badge">生徒ロック</span>
+</div>
+            <div class="meta">
+                <span id="progress" class="pill">未開始</span>
+                <span id="timer" class="pill">-</span>
+                <span id="topics" class="pill">カテゴリ：-</span>
+                <span id="difficulty" class="pill">難易度：-</span>
+            </div>
+        </div>
+
+        <div id="lockNote" class="note">
+            生徒ロック中：出題条件やプリセット保存は変更できません。1つのタブだけで実行してください。
+        </div>
+
+        <div class="grid">
+
+            <!-- プリセット -->
+            <div class="panel">
+                <div class="row" id="presetBar">
+                    <button class="presetBtn" data-preset="beginner">beginner</button>
+                    <button class="presetBtn" data-preset="standard">standard</button>
+                    <button class="presetBtn" data-preset="advanced">advanced</button>
+                    <button class="presetBtn" data-preset="conditionsOnly">conditionsOnly</button>
+                    <button class="presetBtn" data-preset="mixBasics">mixBasics</button>
+                    <span class="small">固定プリセット</span>
+                </div>
+
+                <div class="hr"></div>
+
+                <div class="row">
+                    <div class="small"><b class="k">保存プリセット</b>（先生用）</div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                    <div id="userPresetButtons" class="row small">（まだありません）</div>
+                </div>
+
+                <div id="presetManageSection">
+                    <div class="hr"></div>
+                    <div class="row">
+                        <input id="presetNameInput" type="text" placeholder="保存プリセット名（例：第3回_条件式）"
+                            style="min-width:260px;" />
+                        <button id="savePresetBtn">保存</button>
+                        <select id="deletePresetSelect" style="min-width:220px;">
+                            <option value="">削除するプリセットを選択</option>
+                        </select>
+                        <button id="deletePresetBtn">削除</button>
+                        <span id="presetMsg" class="small"></span>
+                    </div>
+                </div>
+
+                <div id="presetIOSection">
+                    <div class="hr"></div>
+                    <div class="row">
+                        <button id="exportPresetsBtn">保存プリセットを出力</button>
+                        <button id="copyExportBtn">出力をコピー</button>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <textarea id="exportArea" placeholder="ここに出力されます（JSON）"></textarea>
+                    </div>
+
+                    <div class="row" style="margin-top:10px;">
+                        <button id="importPresetsBtn">貼り付けJSONをインポート</button>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <textarea id="importArea" placeholder="ここに貼り付けてインポート（JSON）"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 出題設定 -->
+            <div class="panel" id="setupPanel">
+                <div class="row">
+                    <label title="初心者向けの日本語化や補足を表示します">
+                        <input type="checkbox" id="beginnerToggle" />
+                        初心者モード（日本語化/補足）
+                    </label>
+
+                    <label>
+                        問題数：
+                        <select id="countSelect">
+                            <option value="all">全件</option>
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                        </select>
+                    </label>
+
+                    <span class="small">難易度：</span>
+                    <label><input type="checkbox" class="diffChk" value="1" checked>★</label>
+                    <label><input type="checkbox" class="diffChk" value="2" checked>★★</label>
+                    <label><input type="checkbox" class="diffChk" value="3" checked>★★★</label>
+
+                    <button id="startBtn">開始</button>
+                </div>
+
+                <div class="hr"></div>
+
+                <div class="row">
+                    <div style="min-width:220px;">
+                        <label><input type="checkbox" id="langAll" checked> 言語：すべて</label>
+                        <div id="langBox" class="checkgrid" style="margin-top:8px;"></div>
+                    </div>
+
+                    <div style="min-width:220px;">
+                        <label><input type="checkbox" id="genreAll" checked> ジャンル：すべて</label>
+                        <div id="genreBox" class="checkgrid" style="margin-top:8px;"></div>
+                    </div>
+                </div>
+
+                <div class="hr"></div>
+                <div class="small">
+                    生徒用リンク例：<br>
+                    <span class="k">?student=1&preset=conditionsOnly&fresh=1&autostart=1&qver=20260209</span>
+                </div>
+            </div>
+
+            <!-- 問題表示 -->
+            <div class="panel">
+                <div id="quiz" class="small">出題設定を選んで「開始」を押してください。</div>
+                <div class="hr"></div>
+                <div class="row">
+                    <button id="nextBtn" style="display:none;">次の問題</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="quiz.js"></script>
+</body>
+
+</html>
