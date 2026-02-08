@@ -157,7 +157,11 @@ fetch(questionsUrl)
         refreshUserPresetsUI();
 
         initPresetIO();
+
         applyStudentLockUI();
+
+        // ★追加：固定プリセットボタンの表示を日本語化
+        localizeFixedPresetButtons();
 
         if (isStudentLock) {
             applyForcedPresetOrFallback();
@@ -373,15 +377,24 @@ function uniq(arr) { return Array.from(new Set(arr)); }
 // 固定プリセット
 // ----------------------------
 function initPresetButtons() {
-    if (!presetBarEl) return;
+    const container = document.getElementById("presetButtons");
+    if (!container) return;
 
-    const fixedBtns = Array.from(presetBarEl.querySelectorAll("button[data-preset]"));
-    fixedBtns.forEach(btn => {
+    container.innerHTML = "";
+
+    Object.keys(PRESETS).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = "presetBtn";
+
+        // ★ここが変更点：日本語ラベル表示
+        btn.textContent = PRESET_LABELS_JP[key] || key;
+
         btn.addEventListener("click", () => {
-            if (isStudentLock) return;
-            const key = btn.getAttribute("data-preset");
-            applyFixedPreset(key);
+            applyPreset(key);
+            highlightActivePreset(key);
         });
+
+        container.appendChild(btn);
     });
 }
 
@@ -465,6 +478,43 @@ function refreshUserPresetsUI() {
     if (isStudentLock) disablePresetButtons(true);
 }
 
+// ===============================
+// プリセット表示名（内部キーは英語のまま）
+// ===============================
+const PRESET_LABELS_JP = {
+    beginner: "初級",
+    standard: "標準",
+    advanced: "応用",
+    conditionsOnly: "条件式のみ",
+    mixBasics: "基礎ミックス"
+};
+
+// ===============================
+// ジャンル表示名（内部キー → 日本語）
+// ===============================
+const GENRE_LABELS_JP = {
+    conditions: "条件式",
+    loops: "繰り返し",
+    arrays: "配列",
+    strings: "文字列"
+};
+
+function updateHeaderInfo(q) {
+    progressEl.textContent = `問題 ${current + 1}/${questions.length}`;
+    timerEl.textContent = `残り時間 ${format(timeLeft)}`;
+
+    const lang = q.lang || "";
+    const genre = toGenreLabel(q.genre || "");
+    const topics = Array.isArray(q.topics) ? q.topics.join(" / ") : "";
+
+    topicsEl.textContent = `カテゴリ：${lang} / ${genre}${topics ? " / " + topics : ""}`;
+    difficultyEl.textContent = `難易度：${"★".repeat(q.difficulty || 1)}`;
+}
+
+function toGenreLabel(genre) {
+    return GENRE_LABELS_JP[genre] || genre;
+}
+
 function loadUserPresets() {
     try {
         const raw = localStorage.getItem(LS_KEY_USER_PRESETS);
@@ -472,6 +522,25 @@ function loadUserPresets() {
         const obj = JSON.parse(raw);
         return (obj && typeof obj === "object") ? obj : {};
     } catch { return {}; }
+}
+
+function localizeFixedPresetButtons() {
+    // 固定プリセットのボタンが置かれているコンテナ（idが違っても拾う）
+    const bar =
+        document.getElementById("presetBar") ||
+        document.getElementById("presetButtons");
+
+    if (!bar) return;
+
+    // ここでは「固定プリセットのボタン」だけを対象にする
+    const buttons = Array.from(bar.querySelectorAll("button"));
+
+    buttons.forEach(btn => {
+        const key = (btn.textContent || "").trim();
+        if (PRESET_LABELS_JP[key]) {
+            btn.textContent = PRESET_LABELS_JP[key];
+        }
+    });
 }
 
 function saveUserPresets(obj) {
