@@ -25,6 +25,8 @@ let timerHandle = null;
 let lockHeartbeatHandle = null;
 
 let reviewChecked = false;
+let mainChecked = false; // ★メイン出題の採点済みフラグ
+let pendingMainLog = null; // ★メイン出題の採点結果を一時保持
 let answersLog = [];
 
 const quizEl = document.getElementById("quiz");
@@ -764,7 +766,7 @@ function startMainMode(pickedQuestions) {
     startTimer();
 
     nextBtn.style.display = "inline-block";
-    nextBtn.textContent = "次の問題";
+    nextBtn.textContent = "採点する"; // ★1問ずつ正誤確認
 
     snapshotSession(false);
 }
@@ -795,6 +797,8 @@ function resetRunState(newTime) {
     timeLeft = newTime;
     answersLog = [];
     reviewChecked = false;
+    mainChecked = false;
+    pendingMainLog = null;
 }
 
 // ----------------------------
@@ -802,6 +806,14 @@ function resetRunState(newTime) {
 // ----------------------------
 function showQuestion() {
     const q = questions[current];
+
+    // ★メインは「採点する」→フィードバック→「次へ」の2段階
+    if (mode === "main") {
+        mainChecked = false;
+        pendingMainLog = null;
+        nextBtn.textContent = "採点する";
+    }
+
 
     const prefix = (mode === "review") ? "復習" : "問題";
     progressEl.textContent = `${prefix} ${current + 1} / ${questions.length}`;
@@ -838,7 +850,7 @@ function showQuestion() {
       <div id="${explainId}" style="display:none;">
         ${buildExplanationHtml(q, true)}
       </div>
-      <div class="small">※ここは答え合わせではなく「読み取り確認」用です</div>
+      <div class="small">※採点は下の「採点する」で行います。解説は読み取り確認用です</div>
     `;
     }
 
@@ -873,12 +885,18 @@ function onNextButton() {
     if (mode === "review") {
         if (!reviewChecked) checkCurrentReviewQuestion();
         else goNextReviewQuestion();
-    } else {
-        nextQuestionMain();
+        return;
+    }
+
+    // ★メイン：1問ずつ採点してから進む
+    if (mode === "main") {
+        if (!mainChecked) checkCurrentMainQuestion();
+        else goNextMainQuestion();
+        return;
     }
 }
 
-function nextQuestionMain() {
+function checkCurrentMainQuestion() {
     const sel = document.querySelector('input[name="choice"]:checked');
     if (!sel) { alert("選択してください"); return; }
 
@@ -888,14 +906,47 @@ function nextQuestionMain() {
     const correct = chosen === correctIndex;
 
     if (correct) score++;
-    answersLog.push({ id: q.id, chosen, correct, correctIndex, questionObj: q });
+    const log = { id: q.id, chosen, correct, correctIndex, questionObj: q };
+    answersLog.push(log);
+    pendingMainLog = log;
 
+    showMainFeedback(log);
+
+    mainChecked = true;
+    nextBtn.textContent = "次へ";
+
+    snapshotSession(false);
+}
+
+function goNextMainQuestion() {
     current++;
+    mainChecked = false;
+    pendingMainLog = null;
 
     snapshotSession(false);
 
-    if (current < questions.length) showQuestion();
-    else finishMain("全問回答");
+    if (current < questions.length) {
+        showQuestion();
+        nextBtn.textContent = "採点する";
+    } else {
+        finishMain("全問回答");
+    }
+}
+
+const q = questions[current];
+const chosen = Number(sel.value);
+const correctIndex = q.answer;
+const correct = chosen === correctIndex;
+
+if (correct) score++;
+answersLog.push({ id: q.id, chosen, correct, correctIndex, questionObj: q });
+
+current++;
+
+snapshotSession(false);
+
+if (current < questions.length) showQuestion();
+else finishMain("全問回答");
 }
 
 // ----------------------------
@@ -992,6 +1043,61 @@ function showReviewFeedback(log) {
 
     wireToggleButtons();
 }
+
+// ----------------------------
+// メインモード：採点結果表示（1問ずつ）
+// ----------------------------
+function showMainFeedback(log) {
+    const q = log.questionObj;
+
+    const okNgText = log.correct ? "正解" : "不正解";
+    const okNgClass = log.correct ? "ok" : "ng";
+
+    const chosenText = q.choices?.[log.chosen] ?? "(不明)";
+    const correctText = q.choices?.[log.correctIndex] ?? "(不明)";
+
+    const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
+    const jpBlock = (beginnerMode && q.jp) ? `<div class="jp"><b>日本語化：</b>${escapeHtml(q.jp)}</div>` : "";
+
+    const hintBlock = (!log.correct && q.hint) ? `<div class="small"><b>ヒント：</b>${escapeHtml(q.hint)}</div>` : "";
+
+    // 解説（読み取り確認）
+    const explainId = `explain-main-${q.id}`;
+    const explainBtn = `
+      <button class="toggleBtn" data-target="${explainId}">▶ 解説を見る（読み取り確認）</button>
+      <div id="${explainId}" style="display:none;">
+        ${buildExplanationHtml(q, true)}
+      </div>
+    `;
+
+    quizEl.innerHTML = `
+    <div class="result-item">
+      <div class="result-badges">
+        <span class="tag ${okNgClass}">${okNgText}</span>
+        <span class="tag">#${escapeHtml(q.id)}</span>
+        <span class="tag">${escapeHtml(q.lang ?? "-")}</span>
+        <span class="tag">${escapeHtml(q.genre ?? "-")}</span>
+        ${q.skill ? `<span class="tag">${escapeHtml(q.skill)}</span>` : ""}
+        <span class="tag">${escapeHtml("★".repeat(q.difficulty ?? 1))}</span>
+      </div>
+
+      <div class="small"><b>問題：</b>${escapeHtml(q.question)}</div>
+      ${exprBlock}
+      ${jpBlock}
+
+      <div class="small"><b>あなたの選択：</b>${escapeHtml(chosenText)}</div>
+      <div class="small"><b>正解：</b>${escapeHtml(correctText)}</div>
+
+      ${hintBlock}
+      ${explainBtn}
+
+      <div class="small">※「次へ」で次の問題に進みます</div>
+    </div>
+  `;
+
+    wireToggleButtons();
+}
+
 
 // ----------------------------
 // タイマー（多重タブ防止統合）
