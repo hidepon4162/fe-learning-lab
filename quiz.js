@@ -69,6 +69,7 @@ const importAreaEl = document.getElementById("importArea");
 const lockBadgeEl = document.getElementById("lockBadge");
 const lockNoteEl = document.getElementById("lockNote");
 const teacherPresetSectionEl = document.getElementById("teacherPresetSection");
+const teacherLinkExampleEl = document.getElementById("teacherLinkExample");
 const presetManageSectionEl = document.getElementById("presetManageSection");
 const presetIOSectionEl = document.getElementById("presetIOSection");
 
@@ -83,8 +84,14 @@ function teacherUIEnabled() {
 }
 
 function applyTeacherUI() {
-    if (!teacherPresetSectionEl) return;
-    teacherPresetSectionEl.style.display = teacherUIEnabled() ? "block" : "none";
+    const show = teacherUIEnabled();
+
+    if (teacherPresetSectionEl) {
+        teacherPresetSectionEl.style.display = show ? "block" : "none";
+    }
+    if (teacherLinkExampleEl) {
+        teacherLinkExampleEl.style.display = show ? "block" : "none";
+    }
 }
 
 // 先生用UIはデフォルト非表示なので、ここで必要なら表示
@@ -868,13 +875,31 @@ function resetRunState(newTime) {
 }
 
 // ----------------------------
-// 「日本語化」文から結論（答え）を除外
+// 日本語化（採点前/採点後）
 // ----------------------------
-function stripConclusionFromJp(jpText) {
+function extractLegacyJpResult(jpText) {
     const s = String(jpText ?? "").trim();
     if (!s) return "";
-    // 「結論：」「答え：」以降を丸ごと落とす（改行/同一行どちらも対応）
+    const m = s.match(/(?:^|\r?\n)\s*(結論|答え)\s*[:：]\s*(.+)\s*$/m);
+    return (m?.[2] ?? "").trim();
+}
+
+function stripLegacyJpResult(jpText) {
+    const s = String(jpText ?? "").trim();
+    if (!s) return "";
     return s.replace(/(?:\r?\n)?\s*(結論|答え)\s*[:：][\s\S]*$/m, "").trim();
+}
+
+function getJpStudyText(q) {
+    // 新形式: jp は答えを含めない前提。旧形式の互換として結論行は落とす。
+    return stripLegacyJpResult(q?.jp);
+}
+
+function getJpResultText(q) {
+    const v = String(q?.jpResult ?? "").trim();
+    if (v) return v;
+    // 旧形式の互換
+    return extractLegacyJpResult(q?.jp);
 }
 
 // ----------------------------
@@ -902,14 +927,21 @@ function showQuestion() {
 
     difficultyEl.textContent = `難易度：${"★".repeat(q.difficulty ?? 1)}`;
 
+    const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
     const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
-    const jpStudy = stripConclusionFromJp(q.jp);
-    const jpBlock = (beginnerMode && jpStudy)
-        ? `<div class="jp"><b>日本語化：</b>${escapeHtml(jpStudy)}<div class="small" style="margin-top:6px;">※結論は採点後に表示</div></div>`
+    const jpStudy = getJpStudyText(q);
+    const jpId = `jp-${mode}-${escapeHtmlAttr(q.id)}`;
+    const jpToggleBtn = jpStudy
+        ? `<button class="toggleBtn" data-target="${jpId}">${beginnerMode ? "▼ 日本語化を隠す" : "▶ 日本語化を見る"}</button>`
+        : "";
+    const jpBlock = jpStudy
+        ? `<div id="${jpId}" class="jp" style="display:${beginnerMode ? "block" : "none"};"><b>日本語化：</b>${escapeHtml(jpStudy)}</div>`
         : "";
 
     let html = `<h3>${escapeHtml(q.question)}</h3>`;
+    html += codeBlock;
     html += exprBlock;
+    html += jpToggleBtn;
     html += jpBlock;
 
     q.choices.forEach((c, i) => {
@@ -938,8 +970,17 @@ function showQuestion() {
 }
 
 function buildExplanationHtml(q, forceShow) {
-    const jpStudy = stripConclusionFromJp(q.jp);
-    const jpBlock = jpStudy ? `<div class="jp"><b>日本語化：</b>${escapeHtml(jpStudy)}<div class="small" style="margin-top:6px;">※結論は採点後に表示</div></div>` : "";
+    const jpStudy = getJpStudyText(q);
+    const jpId = `jp-explain-${escapeHtmlAttr(q.id)}-${Math.random().toString(16).slice(2)}`;
+    const jpToggleBtn = jpStudy
+        ? `<button class="toggleBtn" data-target="${jpId}">${beginnerMode ? "▼ 日本語化を隠す" : "▶ 日本語化を見る"}</button>`
+        : "";
+    const jpBlock = jpStudy
+        ? `<div id="${jpId}" class="jp" style="display:${beginnerMode ? "block" : "none"};"><b>日本語化：</b>${escapeHtml(jpStudy)}</div>`
+        : "";
+
+    const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
+    const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
 
     const pseudoText = autoPseudo(q);
     const pseudoBlock = pseudoText ? `<div class="small"><b>擬似言語：</b>${escapeHtml(pseudoText)}</div>` : "";
@@ -955,7 +996,7 @@ function buildExplanationHtml(q, forceShow) {
     `
         : "";
 
-    return `${jpBlock}${pseudoBlock}${pseudoCodeBlock}`;
+    return `${codeBlock}${exprBlock}${jpToggleBtn}${jpBlock}${pseudoBlock}${pseudoCodeBlock}`;
 }
 
 // ----------------------------
@@ -1059,8 +1100,13 @@ function showReviewFeedback(log) {
     const chosenText = q.choices?.[log.chosen] ?? "(不明)";
     const correctText = q.choices?.[log.correctIndex] ?? "(不明)";
 
+    const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
     const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
-    const jpBlock = q.jp ? `<div class="jp"><b>日本語化：</b>${escapeHtml(q.jp)}</div>` : "";
+    const jpStudy = getJpStudyText(q);
+    const jpResult = getJpResultText(q);
+    const jpBlock = (jpStudy || jpResult)
+        ? `<div class="jp"><b>日本語化：</b>${escapeHtml(jpStudy || "")}${jpResult ? `<div class="small" style="margin-top:6px;"><b>結論：</b>${escapeHtml(jpResult)}</div>` : ""}</div>`
+        : "";
 
     const hintBlock = (!log.correct && q.hint) ? `<div class="small"><b>ヒント：</b>${escapeHtml(q.hint)}</div>` : "";
 
@@ -1091,6 +1137,7 @@ function showReviewFeedback(log) {
       </div>
 
       <div class="small"><b>問題：</b>${escapeHtml(q.question)}</div>
+      ${codeBlock}
       ${exprBlock}
       ${jpBlock}
 
@@ -1120,8 +1167,13 @@ function showMainFeedback(log) {
     const chosenText = q.choices?.[log.chosen] ?? "(不明)";
     const correctText = q.choices?.[log.correctIndex] ?? "(不明)";
 
+    const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
     const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
-    const jpBlock = (beginnerMode && q.jp) ? `<div class="jp"><b>日本語化：</b>${escapeHtml(q.jp)}</div>` : "";
+    const jpStudy = getJpStudyText(q);
+    const jpResult = getJpResultText(q);
+    const jpBlock = (beginnerMode && (jpStudy || jpResult))
+        ? `<div class="jp"><b>日本語化：</b>${escapeHtml(jpStudy || "")}${jpResult ? `<div class="small" style="margin-top:6px;"><b>結論：</b>${escapeHtml(jpResult)}</div>` : ""}</div>`
+        : "";
 
     const hintBlock = (!log.correct && q.hint) ? `<div class="small"><b>ヒント：</b>${escapeHtml(q.hint)}</div>` : "";
 
@@ -1146,6 +1198,7 @@ function showMainFeedback(log) {
       </div>
 
       <div class="small"><b>問題：</b>${escapeHtml(q.question)}</div>
+      ${codeBlock}
       ${exprBlock}
       ${jpBlock}
 

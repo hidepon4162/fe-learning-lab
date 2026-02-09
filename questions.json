@@ -17,8 +17,8 @@
             "実行時エラー"
         ],
         "answer": 0,
-        "jp": "x が y より小さく、かつ x が 5 と等しい。\n結論：true",
-        "hint": "&& は「両方true」"
+        "jp": "x が y より小さく、かつ x が 5 と等しいかどうかを判定する。",
+        "jpResult": "true"
     },
     {
         "id": "cond-002",
@@ -38,15 +38,15 @@
             "実行時エラー"
         ],
         "answer": 0,
-        "jp": "a が 0 と等しい、または a が 10 より大きい。\n結論：true"
+        "jp": "a が 0 と等しい、または a が 10 より大きいかどうかを判定する（|| はどちらか一方が成り立てば成立）。",
+        "jpResult": "true"
     },
     {
         "id": "cond-003",
         "lang": "csharp",
         "genre": "conditions",
         "topics": [
-            "境界値",
-            ">=<="
+            "境界値"
         ],
         "difficulty": 1,
         "question": "次の式の評価結果として正しいものはどれ？（int score = 60;）",
@@ -58,15 +58,15 @@
             "実行時エラー"
         ],
         "answer": 0,
-        "jp": "score が 60 以上。\n結論：true"
+        "jp": "score が 60 以上かどうか（>=）を判定する。",
+        "jpResult": "true"
     },
     {
         "id": "cond-004",
         "lang": "csharp",
         "genre": "conditions",
         "topics": [
-            "否定",
-            "!"
+            "否定"
         ],
         "difficulty": 2,
         "question": "次の式の評価結果として正しいものはどれ？（bool ok = false;）",
@@ -78,7 +78,8 @@
             "実行時エラー"
         ],
         "answer": 0,
-        "jp": "ok が false なので、それを否定して true。\n結論：true"
+        "jp": "否定演算子（!）は真偽値を反転する。",
+        "jpResult": "true"
     },
     {
         "id": "cond-005",
@@ -88,7 +89,7 @@
             "優先順位"
         ],
         "difficulty": 2,
-        "question": "次の式の評価結果として正しいものはどれ？（bool a = true; bool b = false; bool c = true;）",
+        "question": "次の式の評価結果として正しいものはどれ？（bool a=true; bool b=false; bool c=true;）",
         "expr": "a || b && c",
         "choices": [
             "true",
@@ -97,8 +98,8 @@
             "実行時エラー"
         ],
         "answer": 0,
-        "jp": "&& が先に評価される。b && c は false。a || false で true。\n結論：true",
-        "hint": "&& は || より優先順位が高い"
+        "jp": "演算子の優先順位は && が || より先。まず b&&c を評価してから a||(...) を評価する。",
+        "jpResult": "true"
     },
     {
         "id": "cond-006",
@@ -109,7 +110,7 @@
             "優先順位"
         ],
         "difficulty": 2,
-        "question": "次の式の評価結果として正しいものはどれ？（bool a = true; bool b = false; bool c = true;）",
+        "question": "次の式の評価結果として正しいものはどれ？（bool a=true; bool b=false; bool c=true;）",
         "expr": "(a || b) && c",
         "choices": [
             "true",
@@ -118,7 +119,8 @@
             "実行時エラー"
         ],
         "answer": 0,
-        "jp": "括弧内が先に評価される。a || b は true。true && c で true。\n結論：true"
+        "jp": "括弧は優先して評価される。(a||b) を先に評価し、その結果と c を && で結合する。",
+        "jpResult": "true"
     },
     {
         "id": "cond-007",
@@ -137,8 +139,8 @@
             "実行時エラー"
         ],
         "answer": 1,
-        "jp": "左の x != 0 は false。&& は左が false だと右を評価しない（短絡評価）。そのため 10/x は実行されず、0除算例外は起きない。\n結論：false",
-        "hint": "&& は左が false なら右を見ない"
+        "jp": "&& は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。",
+        "jpResult": "false"
     },
     {
         "id": "cond-008",
@@ -157,15 +159,15 @@
             "実行時エラー"
         ],
         "answer": 0,
-        "jp": "左の x == 0 は true。|| は左が true だと右を評価しない（短絡評価）。そのため 10/x は実行されず、0除算例外は起きない。\n結論：true",
-        "hint": "|| は左が true なら右を見ない"
+        "jp": "|| は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。",
+        "jpResult": "true"
     },
     {
         "id": "cond-009",
         "lang": "csharp",
         "genre": "conditions",
         "topics": [
-            "文字",
+            "char",
             "比較"
         ],
         "difficulty": 3,
@@ -178,8 +180,8 @@
             "実行時エラー"
         ],
         "answer": 0,
-        "jp": "ch が 'A'〜'Z' の範囲（英大文字）に入る。\n結論：true",
-        "hint": "char も大小比較できる（文字コード順）"
+        "jp": "文字（char）は文字コードで比較できる。ch が 'A'〜'Z' の範囲に入っているかを判定する。",
+        "jpResult": "true"
     },
     {
         "id": "cond-010",
@@ -190,7 +192,7 @@
             "比較"
         ],
         "difficulty": 3,
-        "question": "次の式の評価結果として正しいものはどれ？（bool p = true; bool q = true;）",
+        "question": "次の式の評価結果として正しいものはどれ？（bool p=true; bool q=true;）",
         "expr": "p == q",
         "choices": [
             "true",
@@ -199,7 +201,207 @@
             "実行時エラー"
         ],
         "answer": 0,
-        "jp": "bool 同士の == は「同じ値か」。true == true なので true。\n結論：true",
-        "hint": "true == true は true"
+        "jp": "== は2つの bool が同じ値かどうかを判定する。",
+        "jpResult": "true"
+    },
+    {
+        "id": "cond-011",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "if"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "int x=3;\nif(x>5) Console.WriteLine(\"A\");\nelse Console.WriteLine(\"B\");",
+        "choices": [
+            "A",
+            "B",
+            "何も出力されない",
+            "コンパイルエラー"
+        ],
+        "answer": 1,
+        "jp": "if/else は条件の真偽によって、出力する分岐（A/B）が決まる。",
+        "jpResult": "B"
+    },
+    {
+        "id": "cond-012",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "AND"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "int a=5;\nint b=8;\nif(a<10 && b<5) Console.WriteLine(\"OK\");\nelse Console.WriteLine(\"NG\");",
+        "choices": [
+            "OK",
+            "NG",
+            "何も出力されない",
+            "実行時エラー"
+        ],
+        "answer": 1,
+        "jp": "&& は両方の条件が成り立つときだけ if 側に入る。どちらか一方でも成り立たないと else 側になる。",
+        "jpResult": "NG"
+    },
+    {
+        "id": "cond-013",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "OR"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "int n=0;\nif(n==0 || n>100) Console.WriteLine(\"YES\");\nelse Console.WriteLine(\"NO\");",
+        "choices": [
+            "YES",
+            "NO",
+            "何も出力されない",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "|| はどちらか一方の条件が成り立てば if 側に入る。",
+        "jpResult": "YES"
+    },
+    {
+        "id": "cond-014",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "ネスト"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "int score=75;\nif(score>=60){\n if(score>=80)\n  Console.WriteLine(\"A\");\n else\n  Console.WriteLine(\"B\");\n}",
+        "choices": [
+            "A",
+            "B",
+            "何も出力されない",
+            "実行時エラー"
+        ],
+        "answer": 1,
+        "jp": "ネストした if は外側の条件を満たした場合のみ内側に進む。内側の条件により出力（A/B）が決まる。",
+        "jpResult": "B"
+    },
+    {
+        "id": "cond-015",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "else if"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "int x=10;\nif(x<5)\n Console.WriteLine(\"A\");\nelse if(x<15)\n Console.WriteLine(\"B\");\nelse\n Console.WriteLine(\"C\");",
+        "choices": [
+            "A",
+            "B",
+            "C",
+            "何も出力されない"
+        ],
+        "answer": 1,
+        "jp": "else if は上から順に条件を判定し、最初に当てはまった分岐の出力（A/B/C）が選ばれる。",
+        "jpResult": "B"
+    },
+    {
+        "id": "cond-016",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "短絡評価"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "int x=0;\nif(x!=0 && (10/x)>1)\n Console.WriteLine(\"A\");\nelse\n Console.WriteLine(\"B\");",
+        "choices": [
+            "A",
+            "B",
+            "実行時エラー",
+            "コンパイルエラー"
+        ],
+        "answer": 1,
+        "jp": "&& の短絡評価により、左側の条件で結果が確定する場合は右側（10/x）を評価しない。",
+        "jpResult": "B"
+    },
+    {
+        "id": "cond-017",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "否定"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "bool flag=false;\nif(!flag)\n Console.WriteLine(\"ON\");\nelse\n Console.WriteLine(\"OFF\");",
+        "choices": [
+            "ON",
+            "OFF",
+            "何も出力されない",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "否定（!）によって条件の真偽が反転し、if/else のどちらに入るかが決まる。",
+        "jpResult": "ON"
+    },
+    {
+        "id": "cond-018",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "char比較"
+        ],
+        "difficulty": 3,
+        "question": "次のコードの出力はどれ？",
+        "code": "char c='g';\nif(c>='a' && c<='z')\n Console.WriteLine(\"lower\");\nelse\n Console.WriteLine(\"other\");",
+        "choices": [
+            "lower",
+            "other",
+            "何も出力されない",
+            "実行時エラー"
+        ],
+        "answer": 0,
+        "jp": "char の範囲比較で、英小文字（'a'〜'z'）に入っているかを判定して出力が決まる。",
+        "jpResult": "lower"
+    },
+    {
+        "id": "cond-019",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "型チェック"
+        ],
+        "difficulty": 3,
+        "question": "次のコードの結果はどれ？",
+        "code": "int x=1;\nif(x)\n Console.WriteLine(\"A\");",
+        "choices": [
+            "Aが出る",
+            "何も出力されない",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 2,
+        "jp": "C# の if 条件式は bool 型である必要がある（int をそのまま条件にできない）。",
+        "jpResult": "コンパイルエラー"
+    },
+    {
+        "id": "cond-020",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "ブロック省略"
+        ],
+        "difficulty": 3,
+        "question": "次のコードの出力はどれ？",
+        "code": "int x=5;\nif(x>0)\n Console.WriteLine(\"A\");\n Console.WriteLine(\"B\");",
+        "choices": [
+            "Aのみ",
+            "Bのみ",
+            "AとB",
+            "何も出力されない"
+        ],
+        "answer": 2,
+        "jp": "波括弧がない場合、if に属するのは直後の1文だけ。2行目は条件に関係なく実行される。",
+        "jpResult": "AとB"
     }
 ]
