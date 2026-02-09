@@ -265,7 +265,7 @@
         <div class="top">
             <div class="title">
                 基本情報 技術者試験 演習クイズ
-                <span id="lockBadge" class="badge">生徒ロック</span>
+                <span id="lockBadge" class="badge">生徒用モード</span>
             </div>
             <div class="meta">
                 <span id="progress" class="pill">未開始</span>
@@ -276,7 +276,7 @@
         </div>
 
         <div id="lockNote" class="note">
-            生徒ロック中：出題条件やプリセット保存は変更できません。1つのタブだけで実行してください。
+            生徒用モードです。出題条件は変更できません。タブは1つだけで利用してください。
         </div>
 
         <div class="grid">
@@ -284,52 +284,55 @@
             <!-- プリセット -->
             <div class="panel">
                 <div class="row" id="presetBar">
-                    <button class="presetBtn" data-preset="beginner">beginner</button>
-                    <button class="presetBtn" data-preset="standard">standard</button>
-                    <button class="presetBtn" data-preset="advanced">advanced</button>
-                    <button class="presetBtn" data-preset="conditionsOnly">conditionsOnly</button>
-                    <button class="presetBtn" data-preset="mixBasics">mixBasics</button>
+                    <button class="presetBtn" data-preset="beginner">初級</button>
+                    <button class="presetBtn" data-preset="standard">標準</button>
+                    <button class="presetBtn" data-preset="advanced">応用</button>
+                    <button class="presetBtn" data-preset="conditionsOnly">条件式のみ</button>
+                    <button class="presetBtn" data-preset="mixBasics">基礎ミックス</button>
                     <span class="small">固定プリセット</span>
                 </div>
 
                 <div class="hr"></div>
 
-                <div class="row">
-                    <div class="small"><b class="k">保存プリセット</b>（先生用）</div>
-                </div>
-                <div class="row" style="margin-top:8px;">
-                    <div id="userPresetButtons" class="row small">（まだありません）</div>
-                </div>
-
-                <div id="presetManageSection">
-                    <div class="hr"></div>
+                <!-- 先生用UI（teacher=1 のときだけ表示） -->
+                <div id="teacherPresetSection" style="display:none;">
                     <div class="row">
-                        <input id="presetNameInput" type="text" placeholder="保存プリセット名（例：第3回_条件式）"
-                            style="min-width:260px;" />
-                        <button id="savePresetBtn">保存</button>
-                        <select id="deletePresetSelect" style="min-width:220px;">
-                            <option value="">削除するプリセットを選択</option>
-                        </select>
-                        <button id="deletePresetBtn">削除</button>
-                        <span id="presetMsg" class="small"></span>
+                        <div class="small"><b class="k">保存プリセット</b>（先生用）</div>
                     </div>
-                </div>
-
-                <div id="presetIOSection">
-                    <div class="hr"></div>
-                    <div class="row">
-                        <button id="exportPresetsBtn">保存プリセットを出力</button>
-                        <button id="copyExportBtn">出力をコピー</button>
-                    </div>
-                    <div style="margin-top:8px;">
-                        <textarea id="exportArea" placeholder="ここに出力されます（JSON）"></textarea>
+                    <div class="row" style="margin-top:8px;">
+                        <div id="userPresetButtons" class="row small">（まだありません）</div>
                     </div>
 
-                    <div class="row" style="margin-top:10px;">
-                        <button id="importPresetsBtn">貼り付けJSONをインポート</button>
+                    <div id="presetManageSection">
+                        <div class="hr"></div>
+                        <div class="row">
+                            <input id="presetNameInput" type="text" placeholder="保存プリセット名（例：第3回_条件式）"
+                                style="min-width:260px;" />
+                            <button id="savePresetBtn">保存</button>
+                            <select id="deletePresetSelect" style="min-width:220px;">
+                                <option value="">削除するプリセットを選択</option>
+                            </select>
+                            <button id="deletePresetBtn">削除</button>
+                            <span id="presetMsg" class="small"></span>
+                        </div>
                     </div>
-                    <div style="margin-top:8px;">
-                        <textarea id="importArea" placeholder="ここに貼り付けてインポート（JSON）"></textarea>
+
+                    <div id="presetIOSection">
+                        <div class="hr"></div>
+                        <div class="row">
+                            <button id="exportPresetsBtn">保存プリセットを出力</button>
+                            <button id="copyExportBtn">出力をコピー</button>
+                        </div>
+                        <div style="margin-top:8px;">
+                            <textarea id="exportArea" placeholder="ここに出力されます（JSON）"></textarea>
+                        </div>
+
+                        <div class="row" style="margin-top:10px;">
+                            <button id="importPresetsBtn">貼り付けJSONをインポート</button>
+                        </div>
+                        <div style="margin-top:8px;">
+                            <textarea id="importArea" placeholder="ここに貼り付けてインポート（JSON）"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>

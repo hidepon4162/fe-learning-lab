@@ -68,12 +68,27 @@ const importAreaEl = document.getElementById("importArea");
 // ロックモードUI
 const lockBadgeEl = document.getElementById("lockBadge");
 const lockNoteEl = document.getElementById("lockNote");
+const teacherPresetSectionEl = document.getElementById("teacherPresetSection");
 const presetManageSectionEl = document.getElementById("presetManageSection");
 const presetIOSectionEl = document.getElementById("presetIOSection");
 
 // ロック判定：URLに ?student=1 が付いていたらON
 const params = new URLSearchParams(location.search);
 const isStudentLock = params.get("student") === "1";
+const isTeacher = params.get("teacher") === "1";
+
+function teacherUIEnabled() {
+    // teacher=1 でも student=1 は生徒用表示を優先
+    return isTeacher && !isStudentLock;
+}
+
+function applyTeacherUI() {
+    if (!teacherPresetSectionEl) return;
+    teacherPresetSectionEl.style.display = teacherUIEnabled() ? "block" : "none";
+}
+
+// 先生用UIはデフォルト非表示なので、ここで必要なら表示
+applyTeacherUI();
 
 // ★強制プリセット（ロック時のみ有効）
 const forcedPresetKey = isStudentLock ? (params.get("preset") || "beginner") : null;
@@ -156,9 +171,10 @@ fetch(questionsUrl)
         initSetupOptions(allQuestions);
 
         initPresetButtons();
-        refreshUserPresetsUI();
-
-        initPresetIO();
+        if (teacherUIEnabled()) {
+            refreshUserPresetsUI();
+            initPresetIO();
+        }
 
         applyStudentLockUI();
 
@@ -295,7 +311,7 @@ function applyForcedPresetOrFallback() {
     const fixed = getFixedPresets();
     if (fixed[forcedPresetKey]) {
         applySettingsToUI(fixed[forcedPresetKey]);
-        flashMsg(`生徒用：プリセット「${forcedPresetKey}」を適用しました。`);
+        flashMsg(`生徒用：プリセット「${presetLabel(forcedPresetKey)}」を適用しました。`);
         return;
     }
 
@@ -307,7 +323,7 @@ function applyForcedPresetOrFallback() {
     }
 
     applySettingsToUI(getFixedPresets().beginner);
-    flashMsg(`生徒用：指定プリセットが見つからないため beginner を適用しました。`, true);
+    flashMsg(`生徒用：指定プリセットが見つからないため「${presetLabel("beginner")}」を適用しました。`, true);
 }
 
 // ----------------------------
@@ -337,14 +353,18 @@ function initSetupOptions(list) {
     countSelectEl.addEventListener("change", () => { if (!isStudentLock) saveSettingsFromUI(); });
     diffChkEls.forEach(x => x.addEventListener("change", () => { if (!isStudentLock) saveSettingsFromUI(); }));
 
-    savePresetBtnEl.addEventListener("click", () => { if (!isStudentLock) onSavePreset(); });
-    deletePresetBtnEl.addEventListener("click", () => { if (!isStudentLock) onDeletePreset(); });
+    // 先生用プリセット操作は teacher=1 のときだけ有効
+    if (teacherUIEnabled()) {
+        savePresetBtnEl.addEventListener("click", () => onSavePreset());
+        deletePresetBtnEl.addEventListener("click", () => onDeletePreset());
+    }
 }
 
 function initPresetIO() {
-    if (exportPresetsBtnEl) exportPresetsBtnEl.addEventListener("click", () => { if (!isStudentLock) onExportPresets(); });
-    if (copyExportBtnEl) copyExportBtnEl.addEventListener("click", () => { if (!isStudentLock) onCopyExport(); });
-    if (importPresetsBtnEl) importPresetsBtnEl.addEventListener("click", () => { if (!isStudentLock) onImportPresets(); });
+    if (!teacherUIEnabled()) return;
+    if (exportPresetsBtnEl) exportPresetsBtnEl.addEventListener("click", () => onExportPresets());
+    if (copyExportBtnEl) copyExportBtnEl.addEventListener("click", () => onCopyExport());
+    if (importPresetsBtnEl) importPresetsBtnEl.addEventListener("click", () => onImportPresets());
 }
 
 function appendCheck(container, className, value, labelText) {
@@ -491,6 +511,11 @@ const PRESET_LABELS_JP = {
     mixBasics: "基礎ミックス"
 };
 
+function presetLabel(key) {
+    const k = String(key ?? "").trim();
+    return PRESET_LABELS_JP[k] || k;
+}
+
 // ===============================
 // ジャンル表示名（内部キー → 日本語）
 // ===============================
@@ -505,7 +530,7 @@ function updateHeaderInfo(q) {
     progressEl.textContent = `問題 ${current + 1}/${questions.length}`;
     timerEl.textContent = `残り時間 ${format(timeLeft)}`;
 
-    const lang = q.lang || "";
+    const lang = toLangLabel(q.lang || "");
     const genre = toGenreLabel(q.genre || "");
     const topics = Array.isArray(q.topics) ? q.topics.join(" / ") : "";
 
@@ -515,6 +540,47 @@ function updateHeaderInfo(q) {
 
 function toGenreLabel(genre) {
     return GENRE_LABELS_JP[genre] || genre;
+}
+
+// ===============================
+// 言語表示名（内部キー → 表示用）
+// ===============================
+const LANG_LABELS = {
+    csharp: "C#"
+};
+
+function toLangLabel(lang) {
+    const k = String(lang ?? "").trim();
+    return LANG_LABELS[k] || k;
+}
+
+function buildCategoryTextFromUI() {
+    const s = readSettingsFromUI();
+
+    const langs = Array.isArray(s?.langs) ? s.langs : ["all"];
+    const genres = Array.isArray(s?.genres) ? s.genres : ["all"];
+
+    const langText =
+        (langs.length === 1 && langs[0] === "all")
+            ? "すべて"
+            : langs.map(toLangLabel).join(" / ");
+
+    const genreText =
+        (genres.length === 1 && genres[0] === "all")
+            ? "すべて"
+            : genres.map(toGenreLabel).join(" / ");
+
+    return `カテゴリ：${langText} / ${genreText}`;
+}
+
+function updateCategoryPillFromUI() {
+    // 出題中は showQuestion() がカテゴリを管理するので上書きしない
+    if (mode !== "idle") return;
+    try {
+        topicsEl.textContent = buildCategoryTextFromUI();
+    } catch {
+        topicsEl.textContent = "カテゴリ：-";
+    }
 }
 
 function loadUserPresets() {
@@ -535,13 +601,13 @@ function localizeFixedPresetButtons() {
     if (!bar) return;
 
     // ここでは「固定プリセットのボタン」だけを対象にする
-    const buttons = Array.from(bar.querySelectorAll("button"));
+    // textContent依存だと日本語化後にキーが取れないため data-preset を優先する
+    const buttons = Array.from(bar.querySelectorAll("button[data-preset]"));
 
     buttons.forEach(btn => {
-        const key = (btn.textContent || "").trim();
-        if (PRESET_LABELS_JP[key]) {
-            btn.textContent = PRESET_LABELS_JP[key];
-        }
+        const key = (btn.getAttribute("data-preset") || "").trim() || (btn.textContent || "").trim();
+        const label = PRESET_LABELS_JP[key];
+        if (label) btn.textContent = label;
     });
 }
 
@@ -802,6 +868,16 @@ function resetRunState(newTime) {
 }
 
 // ----------------------------
+// 「日本語化」文から結論（答え）を除外
+// ----------------------------
+function stripConclusionFromJp(jpText) {
+    const s = String(jpText ?? "").trim();
+    if (!s) return "";
+    // 「結論：」「答え：」以降を丸ごと落とす（改行/同一行どちらも対応）
+    return s.replace(/(?:\r?\n)?\s*(結論|答え)\s*[:：][\s\S]*$/m, "").trim();
+}
+
+// ----------------------------
 // 出題表示
 // ----------------------------
 function showQuestion() {
@@ -819,15 +895,18 @@ function showQuestion() {
     progressEl.textContent = `${prefix} ${current + 1} / ${questions.length}`;
 
     const tags = [];
-    if (q.lang) tags.push(q.lang);
-    if (q.genre) tags.push(q.genre);
+    if (q.lang) tags.push(toLangLabel(q.lang));
+    if (q.genre) tags.push(toGenreLabel(q.genre));
     if (Array.isArray(q.topics)) tags.push(...q.topics);
     topicsEl.textContent = `カテゴリ：${tags.join(" / ")}`;
 
     difficultyEl.textContent = `難易度：${"★".repeat(q.difficulty ?? 1)}`;
 
     const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
-    const jpBlock = (beginnerMode && q.jp) ? `<div class="jp"><b>日本語化：</b>${escapeHtml(q.jp)}</div>` : "";
+    const jpStudy = stripConclusionFromJp(q.jp);
+    const jpBlock = (beginnerMode && jpStudy)
+        ? `<div class="jp"><b>日本語化：</b>${escapeHtml(jpStudy)}<div class="small" style="margin-top:6px;">※結論は採点後に表示</div></div>`
+        : "";
 
     let html = `<h3>${escapeHtml(q.question)}</h3>`;
     html += exprBlock;
@@ -859,7 +938,8 @@ function showQuestion() {
 }
 
 function buildExplanationHtml(q, forceShow) {
-    const jpBlock = q.jp ? `<div class="jp"><b>日本語化：</b>${escapeHtml(q.jp)}</div>` : "";
+    const jpStudy = stripConclusionFromJp(q.jp);
+    const jpBlock = jpStudy ? `<div class="jp"><b>日本語化：</b>${escapeHtml(jpStudy)}<div class="small" style="margin-top:6px;">※結論は採点後に表示</div></div>` : "";
 
     const pseudoText = autoPseudo(q);
     const pseudoBlock = pseudoText ? `<div class="small"><b>擬似言語：</b>${escapeHtml(pseudoText)}</div>` : "";
@@ -931,22 +1011,6 @@ function goNextMainQuestion() {
     } else {
         finishMain("全問回答");
     }
-}
-
-const q = questions[current];
-const chosen = Number(sel.value);
-const correctIndex = q.answer;
-const correct = chosen === correctIndex;
-
-if (correct) score++;
-answersLog.push({ id: q.id, chosen, correct, correctIndex, questionObj: q });
-
-current++;
-
-snapshotSession(false);
-
-if (current < questions.length) showQuestion();
-else finishMain("全問回答");
 }
 
 // ----------------------------
@@ -1259,7 +1323,7 @@ function setIdleScreen() {
 
     progressEl.textContent = "未開始";
     timerEl.textContent = "-";
-    topicsEl.textContent = "カテゴリ：-";
+    updateCategoryPillFromUI();
     difficultyEl.textContent = "難易度：-";
 
     quizEl.innerHTML = `<div class="small">出題設定を選んで「開始」を押してください。</div>`;
@@ -1330,6 +1394,7 @@ function saveBeginnerMode(isOn) {
 function saveSettingsFromUI() {
     const s = readSettingsFromUI();
     saveSettings(s);
+    updateCategoryPillFromUI();
 }
 function saveSettings(settingsObj) {
     try { localStorage.setItem(LS_KEY_SETTINGS, JSON.stringify(settingsObj)); } catch { }
