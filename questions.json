@@ -213,7 +213,7 @@
         ],
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
-        "code": "int x=3;\nif(x>5) Console.WriteLine(\"A\");\nelse Console.WriteLine(\"B\");",
+        "code": "int x = 3;\n\nif (x > 5)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}",
         "choices": [
             "A",
             "B",
@@ -233,7 +233,7 @@
         ],
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
-        "code": "int a=5;\nint b=8;\nif(a<10 && b<5) Console.WriteLine(\"OK\");\nelse Console.WriteLine(\"NG\");",
+        "code": "int a = 5;\nint b = 8;\n\nif (a < 10 && b < 5)\n{\n    Console.WriteLine(\"OK\");\n}\nelse\n{\n    Console.WriteLine(\"NG\");\n}",
         "choices": [
             "OK",
             "NG",
@@ -253,7 +253,7 @@
         ],
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
-        "code": "int n=0;\nif(n==0 || n>100) Console.WriteLine(\"YES\");\nelse Console.WriteLine(\"NO\");",
+        "code": "int n = 0;\n\nif (n == 0 || n > 100)\n{\n    Console.WriteLine(\"YES\");\n}\nelse\n{\n    Console.WriteLine(\"NO\");\n}",
         "choices": [
             "YES",
             "NO",
@@ -273,7 +273,7 @@
         ],
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
-        "code": "int score=75;\nif(score>=60){\n if(score>=80)\n  Console.WriteLine(\"A\");\n else\n  Console.WriteLine(\"B\");\n}",
+        "code": "int score = 75;\n\nif (score >= 60)\n{\n    if (score >= 80)\n    {\n        Console.WriteLine(\"A\");\n    }\n    else\n    {\n        Console.WriteLine(\"B\");\n    }\n}",
         "choices": [
             "A",
             "B",
@@ -293,7 +293,7 @@
         ],
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
-        "code": "int x=10;\nif(x<5)\n Console.WriteLine(\"A\");\nelse if(x<15)\n Console.WriteLine(\"B\");\nelse\n Console.WriteLine(\"C\");",
+        "code": "int x = 10;\n\nif (x < 5)\n{\n    Console.WriteLine(\"A\");\n}\nelse if (x < 15)\n{\n    Console.WriteLine(\"B\");\n}\nelse\n{\n    Console.WriteLine(\"C\");\n}",
         "choices": [
             "A",
             "B",
@@ -313,7 +313,7 @@
         ],
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
-        "code": "int x=0;\nif(x!=0 && (10/x)>1)\n Console.WriteLine(\"A\");\nelse\n Console.WriteLine(\"B\");",
+        "code": "int x = 0;\n\nif (x != 0 && (10 / x) > 1)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}",
         "choices": [
             "A",
             "B",
@@ -333,7 +333,7 @@
         ],
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
-        "code": "bool flag=false;\nif(!flag)\n Console.WriteLine(\"ON\");\nelse\n Console.WriteLine(\"OFF\");",
+        "code": "bool flag = false;\n\nif (!flag)\n{\n    Console.WriteLine(\"ON\");\n}\nelse\n{\n    Console.WriteLine(\"OFF\");\n}",
         "choices": [
             "ON",
             "OFF",
@@ -353,7 +353,7 @@
         ],
         "difficulty": 3,
         "question": "次のコードの出力はどれ？",
-        "code": "char c='g';\nif(c>='a' && c<='z')\n Console.WriteLine(\"lower\");\nelse\n Console.WriteLine(\"other\");",
+        "code": "char c = 'g';\n\nif (c >= 'a' && c <= 'z')\n{\n    Console.WriteLine(\"lower\");\n}\nelse\n{\n    Console.WriteLine(\"other\");\n}",
         "choices": [
             "lower",
             "other",
@@ -373,7 +373,7 @@
         ],
         "difficulty": 3,
         "question": "次のコードの結果はどれ？",
-        "code": "int x=1;\nif(x)\n Console.WriteLine(\"A\");",
+        "code": "int x = 1;\n\nif (x)\n{\n    Console.WriteLine(\"A\");\n}",
         "choices": [
             "Aが出る",
             "何も出力されない",
@@ -393,7 +393,7 @@
         ],
         "difficulty": 3,
         "question": "次のコードの出力はどれ？",
-        "code": "int x=5;\nif(x>0)\n Console.WriteLine(\"A\");\n Console.WriteLine(\"B\");",
+        "code": "int x = 5;\n\nif (x > 0)\n    Console.WriteLine(\"A\");\n\nConsole.WriteLine(\"B\");",
         "choices": [
             "Aのみ",
             "Bのみ",
