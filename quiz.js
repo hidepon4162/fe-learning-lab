@@ -162,7 +162,7 @@ fetch(questionsUrl)
         if (!r.ok) throw new Error(`HTTP ${r.status} ${r.statusText}`);
         return r.json();
     })
-    .then(data => {
+    .then(async (data) => {
         if (!Array.isArray(data)) {
             throw new Error("questions.json の形式が不正です（配列になっていません）。");
         }
@@ -189,7 +189,7 @@ fetch(questionsUrl)
         localizeFixedPresetButtons();
 
         if (isStudentLock) {
-            applyForcedPresetOrFallback();
+            await applyForcedPresetOrFallback();
 
             // ★fresh=1 なら既存セッションを破棄して復元もしない
             if (isFreshStart) {
@@ -312,16 +312,32 @@ function disablePresetButtons(disabled) {
 }
 
 // ----------------------------
-// 強制プリセット
+// 強制プリセット（presets/ ファイル → localStorage → 固定）
 // ----------------------------
-function applyForcedPresetOrFallback() {
+async function fetchPresetFromFile(key) {
+    try {
+        const url = `presets/${encodeURIComponent(key)}.json`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const obj = await res.json();
+        return obj && typeof obj === "object" ? normalizePreset(obj) : null;
+    } catch {
+        return null;
+    }
+}
+
+async function applyForcedPresetOrFallback() {
     const fixed = getFixedPresets();
-    if (fixed[forcedPresetKey]) {
-        applySettingsToUI(fixed[forcedPresetKey]);
+
+    // 1) presets/XXX.json を試す
+    const filePreset = await fetchPresetFromFile(forcedPresetKey);
+    if (filePreset) {
+        applySettingsToUI(filePreset);
         flashMsg(`生徒用：プリセット「${presetLabel(forcedPresetKey)}」を適用しました。`);
         return;
     }
 
+    // 2) localStorage の保存プリセット
     const user = loadUserPresets();
     if (user[forcedPresetKey]) {
         applySettingsToUI(user[forcedPresetKey]);
@@ -329,6 +345,14 @@ function applyForcedPresetOrFallback() {
         return;
     }
 
+    // 3) 固定プリセット（beginner 等）
+    if (fixed[forcedPresetKey]) {
+        applySettingsToUI(fixed[forcedPresetKey]);
+        flashMsg(`生徒用：プリセット「${presetLabel(forcedPresetKey)}」を適用しました。`);
+        return;
+    }
+
+    // 4) フォールバック
     applySettingsToUI(getFixedPresets().beginner);
     flashMsg(`生徒用：指定プリセットが見つからないため「${presetLabel("beginner")}」を適用しました。`, true);
 }
@@ -367,11 +391,14 @@ function initSetupOptions(list) {
     }
 }
 
+const downloadPresetBtnEl = document.getElementById("downloadPresetBtn");
+
 function initPresetIO() {
     if (!teacherUIEnabled()) return;
     if (exportPresetsBtnEl) exportPresetsBtnEl.addEventListener("click", () => onExportPresets());
     if (copyExportBtnEl) copyExportBtnEl.addEventListener("click", () => onCopyExport());
     if (importPresetsBtnEl) importPresetsBtnEl.addEventListener("click", () => onImportPresets());
+    if (downloadPresetBtnEl) downloadPresetBtnEl.addEventListener("click", () => onDownloadPreset());
 }
 
 function appendCheck(container, className, value, labelText) {
@@ -672,6 +699,21 @@ function onImportPresets() {
     flashMsg(`インポートしました：${count}件`);
 }
 
+function onDownloadPreset() {
+    const name = (presetNameInputEl?.value || "").trim() || "preset";
+    const s = readSettingsFromUI();
+    const preset = normalizePreset(s);
+    const json = JSON.stringify(preset, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name.replace(/[/\\:]/g, "_") + ".json";
+    a.click();
+    URL.revokeObjectURL(url);
+    flashMsg(`ダウンロードしました：${a.download}`);
+}
+
 function normalizePreset(p) {
     const out = {};
     out.count = (typeof p.count === "string") ? p.count : "10";
@@ -932,7 +974,7 @@ function showQuestion() {
     const jpStudy = getJpStudyText(q);
     const jpId = `jp-${mode}-${escapeHtmlAttr(q.id)}`;
     const jpToggleBtn = jpStudy
-        ? `<button class="toggleBtn" data-target="${jpId}">${beginnerMode ? "▼ 日本語化を隠す" : "▶ 日本語化を見る"}</button>`
+        ? `<button class="toggleBtn" data-target="${jpId}" data-show="▶ 日本語化を見る" data-hide="▼ 日本語化を隠す">${beginnerMode ? "▼ 日本語化を隠す" : "▶ 日本語化を見る"}</button>`
         : "";
     const jpBlock = jpStudy
         ? `<div id="${jpId}" class="jp" style="display:${beginnerMode ? "block" : "none"};"><b>日本語化：</b>${escapeHtml(jpStudy)}</div>`
@@ -957,7 +999,7 @@ function showQuestion() {
     if (mode === "main") {
         const explainId = `explain-main-${q.id}`;
         html += `
-      <button class="toggleBtn" data-target="${explainId}">▶ 解説を見る（正解でも確認）</button>
+      <button class="toggleBtn" data-target="${explainId}" data-show="▶ 解説を見る（正解でも確認）" data-hide="▼ 解説を隠す">▶ 解説を見る（正解でも確認）</button>
       <div id="${explainId}" style="display:none;">
         ${buildExplanationHtml(q, true)}
       </div>
@@ -970,18 +1012,6 @@ function showQuestion() {
 }
 
 function buildExplanationHtml(q, forceShow) {
-    const jpStudy = getJpStudyText(q);
-    const jpId = `jp-explain-${escapeHtmlAttr(q.id)}-${Math.random().toString(16).slice(2)}`;
-    const jpToggleBtn = jpStudy
-        ? `<button class="toggleBtn" data-target="${jpId}">${beginnerMode ? "▼ 日本語化を隠す" : "▶ 日本語化を見る"}</button>`
-        : "";
-    const jpBlock = jpStudy
-        ? `<div id="${jpId}" class="jp" style="display:${beginnerMode ? "block" : "none"};"><b>日本語化：</b>${escapeHtml(jpStudy)}</div>`
-        : "";
-
-    const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
-    const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
-
     const pseudoText = autoPseudo(q);
     const pseudoBlock = pseudoText ? `<div class="small"><b>擬似言語：</b>${escapeHtml(pseudoText)}</div>` : "";
 
@@ -991,12 +1021,12 @@ function buildExplanationHtml(q, forceShow) {
     const pseudoCodeId = `pseudocode-any-${q.id}-${Math.random().toString(16).slice(2)}`;
     const pseudoCodeBlock = (pseudocodeText && (isHard || forceShow))
         ? `
-      <button class="toggleBtn" data-target="${pseudoCodeId}">▶ 疑似コード（試験形式）を表示</button>
+      <button class="toggleBtn" data-target="${pseudoCodeId}" data-show="▶ 疑似コード（試験形式）を表示" data-hide="▼ 疑似コードを隠す">▶ 疑似コード（試験形式）を表示</button>
       <pre class="code" id="${pseudoCodeId}" style="display:none;"><code>${escapeHtml(pseudocodeText)}</code></pre>
     `
         : "";
 
-    return `${codeBlock}${exprBlock}${jpToggleBtn}${jpBlock}${pseudoBlock}${pseudoCodeBlock}`;
+    return `${pseudoBlock}${pseudoCodeBlock}`;
 }
 
 // ----------------------------
@@ -1120,7 +1150,7 @@ function showReviewFeedback(log) {
     const pseudoCodeId = `pseudocode-review-${q.id}`;
     const pseudoCodeBlock = shouldShowPseudoCode
         ? `
-      <button class="toggleBtn" data-target="${pseudoCodeId}">▶ 疑似コード（試験形式）を表示</button>
+      <button class="toggleBtn" data-target="${pseudoCodeId}" data-show="▶ 疑似コード（試験形式）を表示" data-hide="▼ 疑似コードを隠す">▶ 疑似コード（試験形式）を表示</button>
       <pre class="code" id="${pseudoCodeId}" style="display:none;"><code>${escapeHtml(pseudocodeText)}</code></pre>
     `
         : "";
@@ -1180,7 +1210,7 @@ function showMainFeedback(log) {
     // 解説（読み取り確認）
     const explainId = `explain-main-${q.id}`;
     const explainBtn = `
-      <button class="toggleBtn" data-target="${explainId}">▶ 解説を見る（読み取り確認）</button>
+      <button class="toggleBtn" data-target="${explainId}" data-show="▶ 解説を見る（読み取り確認）" data-hide="▼ 解説を隠す">▶ 解説を見る（読み取り確認）</button>
       <div id="${explainId}" style="display:none;">
         ${buildExplanationHtml(q, true)}
       </div>
@@ -1395,7 +1425,9 @@ function wireToggleButtons() {
 
             const isHidden = el.style.display === "none";
             el.style.display = isHidden ? "block" : "none";
-            btn.textContent = isHidden ? "▼ 隠す" : "▶ 表示";
+            const hideText = btn.dataset.hide || "▼ 隠す";
+            const showText = btn.dataset.show || "▶ 表示";
+            btn.textContent = isHidden ? hideText : showText;
         });
     });
 }

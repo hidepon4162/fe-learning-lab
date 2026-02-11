@@ -1,0 +1,7 @@
+{
+  "count": "10",
+  "difficulties": [1, 2],
+  "langs": ["csharp"],
+  "genres": ["conditions", "loops"],
+  "beginner": false
+}
