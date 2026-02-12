@@ -474,10 +474,11 @@ function getFixedPresets() {
     return {
         beginner: { count: "10", difficulties: [1], langs: ["csharp"], genres: ["conditions"], beginner: true },
         standard: { count: "10", difficulties: [1, 2], langs: ["csharp"], genres: ["conditions", "loops", "arrays"], beginner: false },
-        advanced: { count: "10", difficulties: [2, 3], langs: ["csharp"], genres: ["conditions", "loops", "arrays"], beginner: false },
+        advanced: { count: "10", difficulties: [2, 3], langs: ["csharp"], genres: ["conditions", "loops", "arrays", "subprograms"], beginner: false },
         conditionsOnly: { count: "10", difficulties: [1, 2, 3], langs: ["csharp"], genres: ["conditions"], beginner: false },
         arraysOnly: { count: "10", difficulties: [1, 2, 3], langs: ["csharp"], genres: ["arrays"], beginner: false },
-        mixBasics: { count: "10", difficulties: [1], langs: ["csharp"], genres: ["conditions", "loops", "arrays"], beginner: true }
+        subprogramsOnly: { count: "10", difficulties: [1, 2, 3], langs: ["csharp"], genres: ["subprograms"], beginner: false },
+        mixBasics: { count: "10", difficulties: [1], langs: ["csharp"], genres: ["conditions", "loops", "arrays", "subprograms"], beginner: true }
     };
 }
 
@@ -552,6 +553,7 @@ const PRESET_LABELS_JP = {
     advanced: "応用",
     conditionsOnly: "条件式のみ",
     arraysOnly: "配列のみ",
+    subprogramsOnly: "副プログラムのみ",
     mixBasics: "基礎ミックス"
 };
 
@@ -567,8 +569,29 @@ const GENRE_LABELS_JP = {
     conditions: "条件式",
     loops: "繰り返し",
     arrays: "配列",
-    strings: "文字列"
+    strings: "文字列",
+    subprograms: "副プログラム"
 };
+
+//  genre → カテゴリ（階層表示用）
+const GENRE_TO_CATEGORY = {
+    conditions: "基本制御",
+    loops: "基本制御",
+    arrays: "基本制御",
+    subprograms: "副プログラム",
+    strings: "データ操作"
+};
+
+function toCategoryLabel(genre) {
+    return GENRE_TO_CATEGORY[genre] || "";
+}
+
+function buildGenreTag(genre) {
+    const g = genre || "";
+    const cat = toCategoryLabel(g);
+    const label = toGenreLabel(g) || "-";
+    return cat ? `${cat} > ${label}` : label;
+}
 
 function updateHeaderInfo(q) {
     progressEl.textContent = `問題 ${current + 1}/${questions.length}`;
@@ -576,9 +599,11 @@ function updateHeaderInfo(q) {
 
     const lang = toLangLabel(q.lang || "");
     const genre = toGenreLabel(q.genre || "");
+    const category = toCategoryLabel(q.genre || "");
     const topics = Array.isArray(q.topics) ? q.topics.join(" / ") : "";
 
-    topicsEl.textContent = `カテゴリ：${lang} / ${genre}${topics ? " / " + topics : ""}`;
+    const categoryPart = category ? `${category} > ${genre}` : genre;
+    topicsEl.textContent = `カテゴリ：${lang} / ${categoryPart}${topics ? " / " + topics : ""}`;
     difficultyEl.textContent = `難易度：${"★".repeat(q.difficulty || 1)}`;
 }
 
@@ -973,7 +998,10 @@ function showQuestion() {
 
     const tags = [];
     if (q.lang) tags.push(toLangLabel(q.lang));
-    if (q.genre) tags.push(toGenreLabel(q.genre));
+    if (q.genre) {
+        const cat = toCategoryLabel(q.genre);
+        tags.push(cat ? `${cat} > ${toGenreLabel(q.genre)}` : toGenreLabel(q.genre));
+    }
     if (Array.isArray(q.topics)) tags.push(...q.topics);
     topicsEl.textContent = `カテゴリ：${tags.join(" / ")}`;
 
@@ -1171,7 +1199,7 @@ function showReviewFeedback(log) {
         <span class="tag ${okNgClass}">${okNgText}</span>
         <span class="tag">#${escapeHtml(q.id)}</span>
         <span class="tag">${escapeHtml(toLangLabel(q.lang ?? "-"))}</span>
-        <span class="tag">${escapeHtml(toGenreLabel(q.genre ?? "-"))}</span>
+        <span class="tag">${escapeHtml(buildGenreTag(q.genre))}</span>
         ${q.skill ? `<span class="tag">${escapeHtml(q.skill)}</span>` : ""}
         <span class="tag">${escapeHtml("★".repeat(q.difficulty ?? 1))}</span>
       </div>
@@ -1232,7 +1260,7 @@ function showMainFeedback(log) {
         <span class="tag ${okNgClass}">${okNgText}</span>
         <span class="tag">#${escapeHtml(q.id)}</span>
         <span class="tag">${escapeHtml(toLangLabel(q.lang ?? "-"))}</span>
-        <span class="tag">${escapeHtml(toGenreLabel(q.genre ?? "-"))}</span>
+        <span class="tag">${escapeHtml(buildGenreTag(q.genre))}</span>
         ${q.skill ? `<span class="tag">${escapeHtml(q.skill)}</span>` : ""}
         <span class="tag">${escapeHtml("★".repeat(q.difficulty ?? 1))}</span>
       </div>
@@ -1759,6 +1787,7 @@ function autoPseudo(q) {
         case "loops": return autoPseudoLoops(q);
         case "arrays": return autoPseudoArrays(q);
         case "strings": return autoPseudoStrings(q);
+        case "subprograms": return autoPseudoSubprograms(q);
         default: return autoPseudoConditions(q);
     }
 }
@@ -1769,6 +1798,7 @@ function autoPseudocode(q) {
         case "loops": return autoPseudocodeLoops(q);
         case "arrays": return autoPseudocodeArrays(q);
         case "strings": return autoPseudocodeStrings(q);
+        case "subprograms": return autoPseudocodeSubprograms(q);
         default: return autoPseudocodeConditions(q);
     }
 }
@@ -1783,7 +1813,7 @@ function autoPseudocodeConditions(q) {
     const expr = (q.expr ?? "").trim();
     if (!expr) return "";
     const cond = normalizeToPseudoCodeCond(expr);
-    return `IF ${cond} THEN\n    (処理)\nENDIF`;
+    return `if (${cond})\n  (処理)\nendif`;
 }
 function toJapaneseCondition(expr) {
     let s = expr.replace(/\s+/g, " ").trim();
@@ -1797,12 +1827,19 @@ function toJapaneseCondition(expr) {
     s = s.replace(/</g, "より小さい");
     return s.replace(/\s+/g, " ").trim();
 }
+// 基本情報試験 擬似言語公式記法（IPA別紙2準拠）
 function normalizeToPseudoCodeCond(expr) {
     let s = expr.replace(/\s+/g, " ").trim();
-    s = s.replace(/&&/g, "AND");
-    s = s.replace(/\|\|/g, "OR");
-    s = s.replace(/!\s*\(/g, "NOT (");
-    return s;
+    s = s.replace(/&&/g, " and ");
+    s = s.replace(/\|\|/g, " or ");
+    s = s.replace(/!\s*\(/g, "not (");
+    s = s.replace(/!([^=])/g, "not $1");
+    s = s.replace(/!=/g, "≠");
+    s = s.replace(/>=/g, "≧");
+    s = s.replace(/<=/g, "≦");
+    s = s.replace(/==/g, "＝");
+    s = s.replace(/\s+/g, " ");
+    return s.trim();
 }
 
 // loops (将来用)
@@ -1839,4 +1876,20 @@ function autoPseudocodeStrings(q) {
     const expr = (q.expr ?? "").trim();
     if (!expr) return "";
     return `(* STRING *)\n${expr}`;
+}
+
+// subprograms
+function autoPseudoSubprograms(q) {
+    const code = (q.code ?? "").trim();
+    const expr = (q.expr ?? "").trim();
+    if (code) return `（副プログラム） ${code.slice(0, 50)}...`;
+    if (!expr) return "";
+    return `（副プログラム） ${expr}`;
+}
+function autoPseudocodeSubprograms(q) {
+    const code = (q.code ?? "").trim();
+    const expr = (q.expr ?? "").trim();
+    if (code) return `(* 副プログラム *)\n${code}`;
+    if (!expr) return "";
+    return `(* SUBPROGRAM *)\n${expr}`;
 }

@@ -2,6 +2,6 @@
   "count": "10",
   "difficulties": [2, 3],
   "langs": ["csharp"],
-  "genres": ["conditions", "loops", "arrays"],
+  "genres": ["conditions", "loops", "arrays", "subprograms"],
   "beginner": false
 }
