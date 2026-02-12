@@ -375,8 +375,9 @@ function initSetupOptions(list) {
         saveSettingsFromUI();
     });
 
-    for (const x of langs) appendCheck(langBoxEl, "langChk", x, x);
-    for (const x of genres) appendCheck(genreBoxEl, "genreChk", x, x);
+    // value は内部キーのまま、表示ラベルだけ日本語化
+    for (const x of langs) appendCheck(langBoxEl, "langChk", x, toLangLabel(x));
+    for (const x of genres) appendCheck(genreBoxEl, "genreChk", x, toGenreLabel(x));
 
     wireAllLogic(langBoxEl, "langChk", langAllEl);
     wireAllLogic(genreBoxEl, "genreChk", genreAllEl);
@@ -1160,8 +1161,8 @@ function showReviewFeedback(log) {
       <div class="result-badges">
         <span class="tag ${okNgClass}">${okNgText}</span>
         <span class="tag">#${escapeHtml(q.id)}</span>
-        <span class="tag">${escapeHtml(q.lang ?? "-")}</span>
-        <span class="tag">${escapeHtml(q.genre ?? "-")}</span>
+        <span class="tag">${escapeHtml(toLangLabel(q.lang ?? "-"))}</span>
+        <span class="tag">${escapeHtml(toGenreLabel(q.genre ?? "-"))}</span>
         ${q.skill ? `<span class="tag">${escapeHtml(q.skill)}</span>` : ""}
         <span class="tag">${escapeHtml("★".repeat(q.difficulty ?? 1))}</span>
       </div>
@@ -1221,8 +1222,8 @@ function showMainFeedback(log) {
       <div class="result-badges">
         <span class="tag ${okNgClass}">${okNgText}</span>
         <span class="tag">#${escapeHtml(q.id)}</span>
-        <span class="tag">${escapeHtml(q.lang ?? "-")}</span>
-        <span class="tag">${escapeHtml(q.genre ?? "-")}</span>
+        <span class="tag">${escapeHtml(toLangLabel(q.lang ?? "-"))}</span>
+        <span class="tag">${escapeHtml(toGenreLabel(q.genre ?? "-"))}</span>
         ${q.skill ? `<span class="tag">${escapeHtml(q.skill)}</span>` : ""}
         <span class="tag">${escapeHtml("★".repeat(q.difficulty ?? 1))}</span>
       </div>
