@@ -1,22 +1,858 @@
 [
-  {"id":"cond-001","lang":"csharp","genre":"conditions","topics":["比較","AND"],"difficulty":1,"question":"次の式の評価結果として正しいものはどれ？（int x = 5; int y = 10;）","expr":"x < y && x == 5","pseudocode":"IF (x < y) AND (x = 5) THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":0,"jp":"x が y より小さく、かつ x が 5 と等しいかどうかを判定する。","jpResult":"true"},
-  {"id":"cond-002","lang":"csharp","genre":"conditions","topics":["比較","OR"],"difficulty":1,"question":"次の式の評価結果として正しいものはどれ？（int a = 0;）","expr":"a == 0 || a > 10","pseudocode":"IF (a = 0) OR (a > 10) THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":0,"jp":"a が 0 と等しい、または a が 10 より大きいかどうかを判定する（|| はどちらか一方が成り立てば成立）。","jpResult":"true"},
-  {"id":"cond-003","lang":"csharp","genre":"conditions","topics":["境界値"],"difficulty":1,"question":"次の式の評価結果として正しいものはどれ？（int score = 60;）","expr":"score >= 60","pseudocode":"IF score >= 60 THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":0,"jp":"score が 60 以上かどうか（>=）を判定する。","jpResult":"true"},
-  {"id":"cond-004","lang":"csharp","genre":"conditions","topics":["否定"],"difficulty":2,"question":"次の式の評価結果として正しいものはどれ？（bool ok = false;）","expr":"!ok","pseudocode":"IF NOT ok THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":0,"jp":"否定演算子（!）は真偽値を反転する。","jpResult":"true"},
-  {"id":"cond-005","lang":"csharp","genre":"conditions","topics":["優先順位"],"difficulty":2,"question":"次の式の評価結果として正しいものはどれ？（bool a=true; bool b=false; bool c=true;）","expr":"a || b && c","pseudocode":"IF a OR (b AND c) THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":0,"jp":"演算子の優先順位は && が || より先。まず b&&c を評価してから a||(...) を評価する。","jpResult":"true"},
-  {"id":"cond-006","lang":"csharp","genre":"conditions","topics":["括弧","優先順位"],"difficulty":2,"question":"次の式の評価結果として正しいものはどれ？（bool a=true; bool b=false; bool c=true;）","expr":"(a || b) && c","pseudocode":"IF (a OR b) AND c THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":0,"jp":"括弧は優先して評価される。(a||b) を先に評価し、その結果と c を && で結合する。","jpResult":"true"},
-  {"id":"cond-007","lang":"csharp","genre":"conditions","topics":["短絡評価"],"difficulty":2,"question":"次の式の評価結果として正しいものはどれ？（int x = 0;）","expr":"x != 0 && (10 / x) > 1","pseudocode":"IF (x ≠ 0) AND ((10 ÷ x) > 1) THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":1,"jp":"&& は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。","jpResult":"false"},
-  {"id":"cond-008","lang":"csharp","genre":"conditions","topics":["短絡評価"],"difficulty":2,"question":"次の式の評価結果として正しいものはどれ？（int x = 0;）","expr":"x == 0 || (10 / x) > 1","pseudocode":"IF (x = 0) OR ((10 ÷ x) > 1) THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":0,"jp":"|| は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。","jpResult":"true"},
-  {"id":"cond-009","lang":"csharp","genre":"conditions","topics":["char","比較"],"difficulty":3,"question":"次の式の評価結果として正しいものはどれ？（char ch = 'A';）","expr":"ch >= 'A' && ch <= 'Z'","pseudocode":"IF (ch >= 'A') AND (ch <= 'Z') THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":0,"jp":"文字（char）は文字コードで比較できる。ch が 'A'〜'Z' の範囲に入っているかを判定する。","jpResult":"true"},
-  {"id":"cond-010","lang":"csharp","genre":"conditions","topics":["bool","比較"],"difficulty":3,"question":"次の式の評価結果として正しいものはどれ？（bool p=true; bool q=true;）","expr":"p == q","pseudocode":"IF p = q THEN 真 ELSE 偽 ENDIF","choices":["true","false","コンパイルエラー","実行時エラー"],"answer":0,"jp":"== は2つの bool が同じ値かどうかを判定する。","jpResult":"true"},
-  {"id":"cond-011","lang":"csharp","genre":"conditions","topics":["if"],"difficulty":1,"question":"次のコードの出力はどれ？","code":"int x = 3;\n\nif (x > 5)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}","pseudocode":"x ← 3\nIF x > 5 THEN\n    \"A\" を出力\nELSE\n    \"B\" を出力\nENDIF","choices":["A","B","何も出力されない","コンパイルエラー"],"answer":1,"jp":"if/else は条件の真偽によって、出力する分岐（A/B）が決まる。","jpResult":"B"},
-  {"id":"cond-012","lang":"csharp","genre":"conditions","topics":["AND"],"difficulty":1,"question":"次のコードの出力はどれ？","code":"int a = 5;\nint b = 8;\n\nif (a < 10 && b < 5)\n{\n    Console.WriteLine(\"OK\");\n}\nelse\n{\n    Console.WriteLine(\"NG\");\n}","pseudocode":"a ← 5\nb ← 8\nIF (a < 10) AND (b < 5) THEN\n    \"OK\" を出力\nELSE\n    \"NG\" を出力\nENDIF","choices":["OK","NG","何も出力されない","実行時エラー"],"answer":1,"jp":"&& は両方の条件が成り立つときだけ if 側に入る。どちらか一方でも成り立たないと else 側になる。","jpResult":"NG"},
-  {"id":"cond-013","lang":"csharp","genre":"conditions","topics":["OR"],"difficulty":1,"question":"次のコードの出力はどれ？","code":"int n = 0;\n\nif (n == 0 || n > 100)\n{\n    Console.WriteLine(\"YES\");\n}\nelse\n{\n    Console.WriteLine(\"NO\");\n}","pseudocode":"n ← 0\nIF (n = 0) OR (n > 100) THEN\n    \"YES\" を出力\nELSE\n    \"NO\" を出力\nENDIF","choices":["YES","NO","何も出力されない","実行時エラー"],"answer":0,"jp":"|| はどちらか一方の条件が成り立てば if 側に入る。","jpResult":"YES"},
-  {"id":"cond-014","lang":"csharp","genre":"conditions","topics":["ネスト"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"int score = 75;\n\nif (score >= 60)\n{\n    if (score >= 80)\n    {\n        Console.WriteLine(\"A\");\n    }\n    else\n    {\n        Console.WriteLine(\"B\");\n    }\n}","pseudocode":"score ← 75\nIF score >= 60 THEN\n    IF score >= 80 THEN\n        \"A\" を出力\n    ELSE\n        \"B\" を出力\n    ENDIF\nENDIF","choices":["A","B","何も出力されない","実行時エラー"],"answer":1,"jp":"ネストした if は外側の条件を満たした場合のみ内側に進む。内側の条件により出力（A/B）が決まる。","jpResult":"B"},
-  {"id":"cond-015","lang":"csharp","genre":"conditions","topics":["else if"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"int x = 10;\n\nif (x < 5)\n{\n    Console.WriteLine(\"A\");\n}\nelse if (x < 15)\n{\n    Console.WriteLine(\"B\");\n}\nelse\n{\n    Console.WriteLine(\"C\");\n}","pseudocode":"x ← 10\nIF x < 5 THEN\n    \"A\" を出力\nELSE\n    IF x < 15 THEN\n        \"B\" を出力\n    ELSE\n        \"C\" を出力\n    ENDIF\nENDIF","choices":["A","B","C","何も出力されない"],"answer":1,"jp":"else if は上から順に条件を判定し、最初に当てはまった分岐の出力（A/B/C）が選ばれる。","jpResult":"B"},
-  {"id":"cond-016","lang":"csharp","genre":"conditions","topics":["短絡評価"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"int x = 0;\n\nif (x != 0 && (10 / x) > 1)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}","pseudocode":"x ← 0\nIF (x ≠ 0) AND ((10 ÷ x) > 1) THEN\n    \"A\" を出力\nELSE\n    \"B\" を出力\nENDIF","choices":["A","B","実行時エラー","コンパイルエラー"],"answer":1,"jp":"&& の短絡評価により、左側の条件で結果が確定する場合は右側（10/x）を評価しない。","jpResult":"B"},
-  {"id":"cond-017","lang":"csharp","genre":"conditions","topics":["否定"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"bool flag = false;\n\nif (!flag)\n{\n    Console.WriteLine(\"ON\");\n}\nelse\n{\n    Console.WriteLine(\"OFF\");\n}","pseudocode":"flag ← 偽\nIF NOT flag THEN\n    \"ON\" を出力\nELSE\n    \"OFF\" を出力\nENDIF","choices":["ON","OFF","何も出力されない","実行時エラー"],"answer":0,"jp":"否定（!）によって条件の真偽が反転し、if/else のどちらに入るかが決まる。","jpResult":"ON"},
-  {"id":"cond-018","lang":"csharp","genre":"conditions","topics":["char比較"],"difficulty":3,"question":"次のコードの出力はどれ？","code":"char c = 'g';\n\nif (c >= 'a' && c <= 'z')\n{\n    Console.WriteLine(\"lower\");\n}\nelse\n{\n    Console.WriteLine(\"other\");\n}","pseudocode":"c ← 'g'\nIF (c >= 'a') AND (c <= 'z') THEN\n    \"lower\" を出力\nELSE\n    \"other\" を出力\nENDIF","choices":["lower","other","何も出力されない","実行時エラー"],"answer":0,"jp":"char の範囲比較で、英小文字（'a'〜'z'）に入っているかを判定して出力が決まる。","jpResult":"lower"},
-  {"id":"cond-019","lang":"csharp","genre":"conditions","topics":["型チェック"],"difficulty":3,"question":"次のコードの結果はどれ？","code":"int x = 1;\n\nif (x)\n{\n    Console.WriteLine(\"A\");\n}","pseudocode":"x ← 1\nIF x THEN  ← 擬似言語では数値で条件判定可能（C#では不可）\n    \"A\" を出力\nENDIF","choices":["Aが出る","何も出力されない","コンパイルエラー","実行時エラー"],"answer":2,"jp":"C# の if 条件式は bool 型である必要がある（int をそのまま条件にできない）。","jpResult":"コンパイルエラー"},
-  {"id":"cond-020","lang":"csharp","genre":"conditions","topics":["ブロック省略"],"difficulty":3,"question":"次のコードの出力はどれ？","code":"int x = 5;\n\nif (x > 0)\n    Console.WriteLine(\"A\");\n\nConsole.WriteLine(\"B\");","pseudocode":"x ← 5\nIF x > 0 THEN\n    \"A\" を出力\nENDIF\n\"B\" を出力  ← if の外（無条件で実行）","choices":["Aのみ","Bのみ","AとB","何も出力されない"],"answer":2,"jp":"波括弧がない場合、if に属するのは直後の1文だけ。2行目は条件に関係なく実行される。","jpResult":"AとB"}
+  {
+    "id": "cond-001",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "比較",
+      "AND"
+    ],
+    "difficulty": 1,
+    "question": "次の式の評価結果として正しいものはどれ？（int x = 5; int y = 10;）",
+    "expr": "x < y && x == 5",
+    "pseudocode": "IF (x < y) AND (x = 5) THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "x が y より小さく、かつ x が 5 と等しいかどうかを判定する。",
+    "jpResult": "true"
+  },
+  {
+    "id": "cond-002",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "比較",
+      "OR"
+    ],
+    "difficulty": 1,
+    "question": "次の式の評価結果として正しいものはどれ？（int a = 0;）",
+    "expr": "a == 0 || a > 10",
+    "pseudocode": "IF (a = 0) OR (a > 10) THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "a が 0 と等しい、または a が 10 より大きいかどうかを判定する（|| はどちらか一方が成り立てば成立）。",
+    "jpResult": "true"
+  },
+  {
+    "id": "cond-003",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "境界値"
+    ],
+    "difficulty": 1,
+    "question": "次の式の評価結果として正しいものはどれ？（int score = 60;）",
+    "expr": "score >= 60",
+    "pseudocode": "IF score >= 60 THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "score が 60 以上かどうか（>=）を判定する。",
+    "jpResult": "true"
+  },
+  {
+    "id": "cond-004",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "否定"
+    ],
+    "difficulty": 2,
+    "question": "次の式の評価結果として正しいものはどれ？（bool ok = false;）",
+    "expr": "!ok",
+    "pseudocode": "IF NOT ok THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "否定演算子（!）は真偽値を反転する。",
+    "jpResult": "true"
+  },
+  {
+    "id": "cond-005",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "優先順位"
+    ],
+    "difficulty": 2,
+    "question": "次の式の評価結果として正しいものはどれ？（bool a=true; bool b=false; bool c=true;）",
+    "expr": "a || b && c",
+    "pseudocode": "IF a OR (b AND c) THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "演算子の優先順位は && が || より先。まず b&&c を評価してから a||(...) を評価する。",
+    "jpResult": "true"
+  },
+  {
+    "id": "cond-006",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "括弧",
+      "優先順位"
+    ],
+    "difficulty": 2,
+    "question": "次の式の評価結果として正しいものはどれ？（bool a=true; bool b=false; bool c=true;）",
+    "expr": "(a || b) && c",
+    "pseudocode": "IF (a OR b) AND c THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "括弧は優先して評価される。(a||b) を先に評価し、その結果と c を && で結合する。",
+    "jpResult": "true"
+  },
+  {
+    "id": "cond-007",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "短絡評価"
+    ],
+    "difficulty": 2,
+    "question": "次の式の評価結果として正しいものはどれ？（int x = 0;）",
+    "expr": "x != 0 && (10 / x) > 1",
+    "pseudocode": "IF (x ≠ 0) AND ((10 ÷ x) > 1) THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 1,
+    "jp": "&& は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。",
+    "jpResult": "false"
+  },
+  {
+    "id": "cond-008",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "短絡評価"
+    ],
+    "difficulty": 2,
+    "question": "次の式の評価結果として正しいものはどれ？（int x = 0;）",
+    "expr": "x == 0 || (10 / x) > 1",
+    "pseudocode": "IF (x = 0) OR ((10 ÷ x) > 1) THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "|| は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。",
+    "jpResult": "true"
+  },
+  {
+    "id": "cond-009",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "char",
+      "比較"
+    ],
+    "difficulty": 3,
+    "question": "次の式の評価結果として正しいものはどれ？（char ch = 'A';）",
+    "expr": "ch >= 'A' && ch <= 'Z'",
+    "pseudocode": "IF (ch >= 'A') AND (ch <= 'Z') THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "文字（char）は文字コードで比較できる。ch が 'A'〜'Z' の範囲に入っているかを判定する。",
+    "jpResult": "true"
+  },
+  {
+    "id": "cond-010",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "bool",
+      "比較"
+    ],
+    "difficulty": 3,
+    "question": "次の式の評価結果として正しいものはどれ？（bool p=true; bool q=true;）",
+    "expr": "p == q",
+    "pseudocode": "IF p = q THEN 真 ELSE 偽 ENDIF",
+    "choices": [
+      "true",
+      "false",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "== は2つの bool が同じ値かどうかを判定する。",
+    "jpResult": "true"
+  },
+  {
+    "id": "cond-011",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "if"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "int x = 3;\n\nif (x > 5)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}",
+    "pseudocode": "x ← 3\nIF x > 5 THEN\n    \"A\" を出力\nELSE\n    \"B\" を出力\nENDIF",
+    "choices": [
+      "A",
+      "B",
+      "何も出力されない",
+      "コンパイルエラー"
+    ],
+    "answer": 1,
+    "jp": "if/else は条件の真偽によって、出力する分岐（A/B）が決まる。",
+    "jpResult": "B"
+  },
+  {
+    "id": "cond-012",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "AND"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "int a = 5;\nint b = 8;\n\nif (a < 10 && b < 5)\n{\n    Console.WriteLine(\"OK\");\n}\nelse\n{\n    Console.WriteLine(\"NG\");\n}",
+    "pseudocode": "a ← 5\nb ← 8\nIF (a < 10) AND (b < 5) THEN\n    \"OK\" を出力\nELSE\n    \"NG\" を出力\nENDIF",
+    "choices": [
+      "OK",
+      "NG",
+      "何も出力されない",
+      "実行時エラー"
+    ],
+    "answer": 1,
+    "jp": "&& は両方の条件が成り立つときだけ if 側に入る。どちらか一方でも成り立たないと else 側になる。",
+    "jpResult": "NG"
+  },
+  {
+    "id": "cond-013",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "OR"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "int n = 0;\n\nif (n == 0 || n > 100)\n{\n    Console.WriteLine(\"YES\");\n}\nelse\n{\n    Console.WriteLine(\"NO\");\n}",
+    "pseudocode": "n ← 0\nIF (n = 0) OR (n > 100) THEN\n    \"YES\" を出力\nELSE\n    \"NO\" を出力\nENDIF",
+    "choices": [
+      "YES",
+      "NO",
+      "何も出力されない",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "|| はどちらか一方の条件が成り立てば if 側に入る。",
+    "jpResult": "YES"
+  },
+  {
+    "id": "cond-014",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "ネスト"
+    ],
+    "difficulty": 2,
+    "question": "次のコードの出力はどれ？",
+    "code": "int score = 75;\n\nif (score >= 60)\n{\n    if (score >= 80)\n    {\n        Console.WriteLine(\"A\");\n    }\n    else\n    {\n        Console.WriteLine(\"B\");\n    }\n}",
+    "pseudocode": "score ← 75\nIF score >= 60 THEN\n    IF score >= 80 THEN\n        \"A\" を出力\n    ELSE\n        \"B\" を出力\n    ENDIF\nENDIF",
+    "choices": [
+      "A",
+      "B",
+      "何も出力されない",
+      "実行時エラー"
+    ],
+    "answer": 1,
+    "jp": "ネストした if は外側の条件を満たした場合のみ内側に進む。内側の条件により出力（A/B）が決まる。",
+    "jpResult": "B"
+  },
+  {
+    "id": "cond-015",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "else if"
+    ],
+    "difficulty": 2,
+    "question": "次のコードの出力はどれ？",
+    "code": "int x = 10;\n\nif (x < 5)\n{\n    Console.WriteLine(\"A\");\n}\nelse if (x < 15)\n{\n    Console.WriteLine(\"B\");\n}\nelse\n{\n    Console.WriteLine(\"C\");\n}",
+    "pseudocode": "x ← 10\nIF x < 5 THEN\n    \"A\" を出力\nELSE\n    IF x < 15 THEN\n        \"B\" を出力\n    ELSE\n        \"C\" を出力\n    ENDIF\nENDIF",
+    "choices": [
+      "A",
+      "B",
+      "C",
+      "何も出力されない"
+    ],
+    "answer": 1,
+    "jp": "else if は上から順に条件を判定し、最初に当てはまった分岐の出力（A/B/C）が選ばれる。",
+    "jpResult": "B"
+  },
+  {
+    "id": "cond-016",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "短絡評価"
+    ],
+    "difficulty": 2,
+    "question": "次のコードの出力はどれ？",
+    "code": "int x = 0;\n\nif (x != 0 && (10 / x) > 1)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}",
+    "pseudocode": "x ← 0\nIF (x ≠ 0) AND ((10 ÷ x) > 1) THEN\n    \"A\" を出力\nELSE\n    \"B\" を出力\nENDIF",
+    "choices": [
+      "A",
+      "B",
+      "実行時エラー",
+      "コンパイルエラー"
+    ],
+    "answer": 1,
+    "jp": "&& の短絡評価により、左側の条件で結果が確定する場合は右側（10/x）を評価しない。",
+    "jpResult": "B"
+  },
+  {
+    "id": "cond-017",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "否定"
+    ],
+    "difficulty": 2,
+    "question": "次のコードの出力はどれ？",
+    "code": "bool flag = false;\n\nif (!flag)\n{\n    Console.WriteLine(\"ON\");\n}\nelse\n{\n    Console.WriteLine(\"OFF\");\n}",
+    "pseudocode": "flag ← 偽\nIF NOT flag THEN\n    \"ON\" を出力\nELSE\n    \"OFF\" を出力\nENDIF",
+    "choices": [
+      "ON",
+      "OFF",
+      "何も出力されない",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "否定（!）によって条件の真偽が反転し、if/else のどちらに入るかが決まる。",
+    "jpResult": "ON"
+  },
+  {
+    "id": "cond-018",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "char比較"
+    ],
+    "difficulty": 3,
+    "question": "次のコードの出力はどれ？",
+    "code": "char c = 'g';\n\nif (c >= 'a' && c <= 'z')\n{\n    Console.WriteLine(\"lower\");\n}\nelse\n{\n    Console.WriteLine(\"other\");\n}",
+    "pseudocode": "c ← 'g'\nIF (c >= 'a') AND (c <= 'z') THEN\n    \"lower\" を出力\nELSE\n    \"other\" を出力\nENDIF",
+    "choices": [
+      "lower",
+      "other",
+      "何も出力されない",
+      "実行時エラー"
+    ],
+    "answer": 0,
+    "jp": "char の範囲比較で、英小文字（'a'〜'z'）に入っているかを判定して出力が決まる。",
+    "jpResult": "lower"
+  },
+  {
+    "id": "cond-019",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "型チェック"
+    ],
+    "difficulty": 3,
+    "question": "次のコードの結果はどれ？",
+    "code": "int x = 1;\n\nif (x)\n{\n    Console.WriteLine(\"A\");\n}",
+    "pseudocode": "x ← 1\nIF x THEN  ← 擬似言語では数値で条件判定可能（C#では不可）\n    \"A\" を出力\nENDIF",
+    "choices": [
+      "Aが出る",
+      "何も出力されない",
+      "コンパイルエラー",
+      "実行時エラー"
+    ],
+    "answer": 2,
+    "jp": "C# の if 条件式は bool 型である必要がある（int をそのまま条件にできない）。",
+    "jpResult": "コンパイルエラー"
+  },
+  {
+    "id": "cond-020",
+    "lang": "csharp",
+    "genre": "conditions",
+    "topics": [
+      "ブロック省略"
+    ],
+    "difficulty": 3,
+    "question": "次のコードの出力はどれ？",
+    "code": "int x = 5;\n\nif (x > 0)\n    Console.WriteLine(\"A\");\n\nConsole.WriteLine(\"B\");",
+    "pseudocode": "x ← 5\nIF x > 0 THEN\n    \"A\" を出力\nENDIF\n\"B\" を出力  ← if の外（無条件で実行）",
+    "choices": [
+      "Aのみ",
+      "Bのみ",
+      "AとB",
+      "何も出力されない"
+    ],
+    "answer": 2,
+    "jp": "波括弧がない場合、if に属するのは直後の1文だけ。2行目は条件に関係なく実行される。",
+    "jpResult": "AとB"
+  },
+  {
+    "id": "loop-001",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "for",
+      "回数"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "for (int i = 0; i < 3; i++)\n{\n    Console.WriteLine(i);\n}",
+    "pseudocode": "FOR i ← 0 TO 2 DO\n    i を出力\nENDFOR",
+    "choices": [
+      "0,1,2",
+      "1,2,3",
+      "0,1,2,3",
+      "コンパイルエラー"
+    ],
+    "answer": 0,
+    "jp": "for は「初期化→条件判定→処理→更新」を繰り返す。条件を満たさなくなった時点で終了する。",
+    "jpResult": "0,1,2"
+  },
+  {
+    "id": "loop-002",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "for",
+      "境界"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "for (int i = 1; i <= 3; i++)\n{\n    Console.WriteLine(i);\n}",
+    "pseudocode": "FOR i ← 1 TO 3 DO\n    i を出力\nENDFOR",
+    "choices": [
+      "1,2,3",
+      "0,1,2",
+      "1,2,3,4",
+      "何も出力されない"
+    ],
+    "answer": 0,
+    "jp": "条件式の「<=」は境界（同じ値）も含めて繰り返す。",
+    "jpResult": "1,2,3"
+  },
+  {
+    "id": "loop-003",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "for",
+      "減少"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "for (int i = 3; i > 0; i--)\n{\n    Console.WriteLine(i);\n}",
+    "pseudocode": "FOR i ← 3 DOWNTO 1 DO\n    i を出力\nENDFOR",
+    "choices": [
+      "3,2,1",
+      "3,2,1,0",
+      "2,1,0",
+      "1,2,3"
+    ],
+    "answer": 0,
+    "jp": "for は増加だけでなく減少方向にも書ける。終了条件に達したら止まる。",
+    "jpResult": "3,2,1"
+  },
+  {
+    "id": "loop-004",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "while"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "int x = 1;\nwhile (x < 5)\n{\n    Console.WriteLine(x);\n    x++;\n}",
+    "pseudocode": "x ← 1\nWHILE x < 5 DO\n    x を出力\n    x ← x + 1\nENDWHILE",
+    "choices": [
+      "1,2,3,4",
+      "1,2,3,4,5",
+      "0,1,2,3,4",
+      "何も出力されない"
+    ],
+    "answer": 0,
+    "jp": "while は条件を満たす間だけ繰り返す。ループ内で変数を更新しないと終わらない。",
+    "jpResult": "1,2,3,4"
+  },
+  {
+    "id": "loop-005",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "do-while"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "int x = 0;\ndo\n{\n    Console.WriteLine(\"Hi\");\n    x++;\n} while (x < 0);",
+    "pseudocode": "x ← 0\nDO\n    \"Hi\" を出力\n    x ← x + 1\nWHILE x < 0",
+    "choices": [
+      "Hi",
+      "何も出力されない",
+      "Hi,Hi",
+      "コンパイルエラー"
+    ],
+    "answer": 0,
+    "jp": "do-while は「条件判定が後」なので、条件が最初から成り立たなくても1回は実行される。",
+    "jpResult": "Hi"
+  },
+  {
+    "id": "loop-006",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "break"
+    ],
+    "difficulty": 2,
+    "question": "次のコードの出力はどれ？",
+    "code": "for (int i = 0; i < 5; i++)\n{\n    if (i == 2)\n    {\n        break;\n    }\n    Console.WriteLine(i);\n}",
+    "pseudocode": "FOR i ← 0 TO 4 DO\n    IF i = 2 THEN\n        ループを終了\n    ENDIF\n    i を出力\nENDFOR",
+    "choices": [
+      "0,1",
+      "0,1,2",
+      "0,1,3,4",
+      "1,2"
+    ],
+    "answer": 0,
+    "jp": "break は最も内側の繰り返しを途中で終了する。",
+    "jpResult": "0,1"
+  },
+  {
+    "id": "loop-007",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "continue"
+    ],
+    "difficulty": 2,
+    "question": "次のコードの出力はどれ？",
+    "code": "for (int i = 0; i < 5; i++)\n{\n    if (i == 2)\n    {\n        continue;\n    }\n    Console.WriteLine(i);\n}",
+    "pseudocode": "FOR i ← 0 TO 4 DO\n    IF i = 2 THEN\n        次の繰り返しへ\n    ENDIF\n    i を出力\nENDFOR",
+    "choices": [
+      "0,1,3,4",
+      "0,1,2,3,4",
+      "0,1",
+      "2"
+    ],
+    "answer": 0,
+    "jp": "continue はその回の残り処理を飛ばして、次の繰り返しに進む。",
+    "jpResult": "0,1,3,4"
+  },
+  {
+    "id": "loop-008",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "ネスト"
+    ],
+    "difficulty": 2,
+    "question": "次のコードで最終的な count の値はどれ？",
+    "code": "int count = 0;\nfor (int i = 0; i < 2; i++)\n{\n    for (int j = 0; j < 3; j++)\n    {\n        count++;\n    }\n}\nConsole.WriteLine(count);",
+    "pseudocode": "count ← 0\nFOR i ← 0 TO 1 DO\n    FOR j ← 0 TO 2 DO\n        count ← count + 1\n    ENDFOR\nENDFOR\ncount を出力",
+    "choices": [
+      "6",
+      "5",
+      "3",
+      "2"
+    ],
+    "answer": 0,
+    "jp": "ネストしたループでは、外側1回ごとに内側が全回数ぶん実行される。",
+    "jpResult": "6"
+  },
+  {
+    "id": "loop-009",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "合計"
+    ],
+    "difficulty": 2,
+    "question": "次のコードで出力される sum はどれ？",
+    "code": "int sum = 0;\nfor (int i = 1; i <= 5; i++)\n{\n    sum += i;\n}\nConsole.WriteLine(sum);",
+    "pseudocode": "sum ← 0\nFOR i ← 1 TO 5 DO\n    sum ← sum + i\nENDFOR\nsum を出力",
+    "choices": [
+      "15",
+      "10",
+      "5",
+      "コンパイルエラー"
+    ],
+    "answer": 0,
+    "jp": "累積（sum += i）は、各回の値を加算し続ける。",
+    "jpResult": "15"
+  },
+  {
+    "id": "loop-010",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "境界"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "for (int i = 0; i < 5; i++)\n{\n    Console.Write(i);\n}",
+    "pseudocode": "FOR i ← 0 TO 4 DO\n    i を出力\nENDFOR",
+    "choices": [
+      "01234",
+      "012345",
+      "1234",
+      "何も出力されない"
+    ],
+    "answer": 0,
+    "jp": "条件が i < 5 のとき、i は 5 になる前まで繰り返す。",
+    "jpResult": "01234"
+  },
+  {
+    "id": "loop-011",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "foreach"
+    ],
+    "difficulty": 2,
+    "question": "次のコードで出力される sum はどれ？",
+    "code": "int sum = 0;\nint[] a = { 1, 2, 3 };\nforeach (int x in a)\n{\n    sum += x;\n}\nConsole.WriteLine(sum);",
+    "pseudocode": "sum ← 0\na ← [1,2,3]\nFOR EACH x IN a DO\n    sum ← sum + x\nENDFOR\nsum を出力",
+    "choices": [
+      "6",
+      "3",
+      "1",
+      "コンパイルエラー"
+    ],
+    "answer": 0,
+    "jp": "foreach は配列などの要素を先頭から順に取り出して処理する。",
+    "jpResult": "6"
+  },
+  {
+    "id": "loop-012",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "for",
+      "増分"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "for (int i = 0; i <= 6; i += 2)\n{\n    Console.WriteLine(i);\n}",
+    "pseudocode": "FOR i ← 0 TO 6 STEP 2 DO\n    i を出力\nENDFOR",
+    "choices": [
+      "0,2,4,6",
+      "0,2,4",
+      "2,4,6",
+      "0,1,2,3,4,5,6"
+    ],
+    "answer": 0,
+    "jp": "更新式（i += 2）により、2ずつ増加する。",
+    "jpResult": "0,2,4,6"
+  },
+  {
+    "id": "loop-013",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "while",
+      "更新"
+    ],
+    "difficulty": 2,
+    "question": "次のコードで最後に出力される x はどれ？",
+    "code": "int x = 1;\nwhile (x < 10)\n{\n    x *= 2;\n}\nConsole.WriteLine(x);",
+    "pseudocode": "x ← 1\nWHILE x < 10 DO\n    x ← x × 2\nENDWHILE\nx を出力",
+    "choices": [
+      "16",
+      "8",
+      "10",
+      "コンパイルエラー"
+    ],
+    "answer": 0,
+    "jp": "ループ内で x を更新し、条件を満たさなくなった時点の x が残る。",
+    "jpResult": "16"
+  },
+  {
+    "id": "loop-014",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "for",
+      "文字列出力"
+    ],
+    "difficulty": 1,
+    "question": "次のコードの出力はどれ？",
+    "code": "for (int i = 0; i < 3; i++)\n{\n    Console.Write(\"X\");\n}",
+    "pseudocode": "FOR i ← 0 TO 2 DO\n    \"X\" を出力\nENDFOR",
+    "choices": [
+      "XXX",
+      "XX",
+      "XXXX",
+      "何も出力されない"
+    ],
+    "answer": 0,
+    "jp": "同じ文字列を繰り返し出力すると、回数ぶん連結される。",
+    "jpResult": "XXX"
+  },
+  {
+    "id": "loop-015",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "break",
+      "内側"
+    ],
+    "difficulty": 3,
+    "question": "次のコードで出力される count はどれ？",
+    "code": "int count = 0;\nfor (int i = 0; i < 3; i++)\n{\n    for (int j = 0; j < 3; j++)\n    {\n        if (j == 1)\n        {\n            break;\n        }\n        count++;\n    }\n}\nConsole.WriteLine(count);",
+    "pseudocode": "count ← 0\nFOR i ← 0 TO 2 DO\n    FOR j ← 0 TO 2 DO\n        IF j = 1 THEN\n            内側ループ終了\n        ENDIF\n        count ← count + 1\n    ENDFOR\nENDFOR\ncount を出力",
+    "choices": [
+      "3",
+      "6",
+      "9",
+      "2"
+    ],
+    "answer": 0,
+    "jp": "break は内側のループだけを終了する。外側のループは続く。",
+    "jpResult": "3"
+  },
+  {
+    "id": "loop-016",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "continue",
+      "合計"
+    ],
+    "difficulty": 3,
+    "question": "次のコードで出力される sum はどれ？",
+    "code": "int sum = 0;\nfor (int i = 1; i <= 5; i++)\n{\n    if (i % 2 == 0)\n    {\n        continue;\n    }\n    sum += i;\n}\nConsole.WriteLine(sum);",
+    "pseudocode": "sum ← 0\nFOR i ← 1 TO 5 DO\n    IF i MOD 2 = 0 THEN\n        次の繰り返しへ\n    ENDIF\n    sum ← sum + i\nENDFOR\nsum を出力",
+    "choices": [
+      "9",
+      "15",
+      "6",
+      "コンパイルエラー"
+    ],
+    "answer": 0,
+    "jp": "continue により一部の回だけ加算処理を飛ばせる。",
+    "jpResult": "9"
+  },
+  {
+    "id": "loop-017",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "for",
+      "スコープ"
+    ],
+    "difficulty": 3,
+    "question": "次のコードはコンパイルできる？",
+    "code": "for (int i = 0; i < 1; i++)\n{\n    Console.WriteLine(i);\n}\nConsole.WriteLine(i);",
+    "pseudocode": "FOR i ← 0 TO 0 DO\n    i を出力\nENDFOR\ni を出力（※iの参照）",
+    "choices": [
+      "コンパイルできる",
+      "コンパイルエラー",
+      "実行時エラー",
+      "何も出力されない"
+    ],
+    "answer": 1,
+    "jp": "for の初期化で宣言した変数は、その for 文のスコープ内だけで有効。",
+    "jpResult": "コンパイルエラー"
+  },
+  {
+    "id": "loop-018",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "while",
+      "減少"
+    ],
+    "difficulty": 2,
+    "question": "次のコードで出力される n はどれ？",
+    "code": "int n = 3;\nwhile (n > 0)\n{\n    n--;\n}\nConsole.WriteLine(n);",
+    "pseudocode": "n ← 3\nWHILE n > 0 DO\n    n ← n - 1\nENDWHILE\nn を出力",
+    "choices": [
+      "0",
+      "1",
+      "-1",
+      "3"
+    ],
+    "answer": 0,
+    "jp": "条件を満たす間だけ減少させ続けると、境界で止まる。",
+    "jpResult": "0"
+  },
+  {
+    "id": "loop-019",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "for",
+      "条件"
+    ],
+    "difficulty": 2,
+    "question": "次のコードの出力はどれ？",
+    "code": "int x = 0;\nfor (; x < 3; )\n{\n    Console.WriteLine(x);\n    x++;\n}",
+    "pseudocode": "FOR x ← 0 TO 2 DO\n    x を出力\nENDFOR",
+    "choices": [
+      "0,1,2",
+      "1,2,3",
+      "0,1,2,3",
+      "何も出力されない"
+    ],
+    "answer": 0,
+    "jp": "for は初期化・更新式を省略しても書ける。更新しないと無限ループになるので注意。",
+    "jpResult": "0,1,2"
+  },
+  {
+    "id": "loop-020",
+    "lang": "csharp",
+    "genre": "loops",
+    "topics": [
+      "無限ループ"
+    ],
+    "difficulty": 3,
+    "question": "次のコードの動作として正しいものはどれ？",
+    "code": "for (int i = 0; i < 3; )\n{\n    Console.WriteLine(i);\n}",
+    "pseudocode": "i ← 0\nWHILE i < 3 DO\n    i を出力\n    （更新が無い）\nENDWHILE",
+    "choices": [
+      "0が無限に出力される",
+      "0,1,2が出力される",
+      "何も出力されない",
+      "コンパイルエラー"
+    ],
+    "answer": 0,
+    "jp": "更新処理が無い場合、条件がずっと成り立つとループが終わらない。",
+    "jpResult": "0が無限に出力される"
+  }
 ]
