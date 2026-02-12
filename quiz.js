@@ -434,24 +434,31 @@ function uniq(arr) { return Array.from(new Set(arr)); }
 // 固定プリセット
 // ----------------------------
 function initPresetButtons() {
-    const container = document.getElementById("presetButtons");
-    if (!container) return;
+    // presetBar のクリック委譲（HTMLのボタンに data-preset が付いている）
+    presetBarEl?.addEventListener("click", async (e) => {
+        const btn = e.target?.closest?.("button[data-preset]");
+        if (!btn || isStudentLock) return;
+        const key = (btn.getAttribute("data-preset") || "").trim();
+        if (!key) return;
+        await applyPreset(key);
+        highlightActivePreset(key);
+    });
+}
 
-    container.innerHTML = "";
+async function applyPreset(key) {
+    const filePreset = await fetchPresetFromFile(key);
+    if (filePreset) {
+        applySettingsToUI(filePreset);
+        flashMsg(`プリセットを適用しました。`);
+        return;
+    }
+    applyFixedPreset(key);
+}
 
-    Object.keys(PRESETS).forEach(key => {
-        const btn = document.createElement("button");
-        btn.className = "presetBtn";
-
-        // ★ここが変更点：日本語ラベル表示
-        btn.textContent = PRESET_LABELS_JP[key] || key;
-
-        btn.addEventListener("click", () => {
-            applyPreset(key);
-            highlightActivePreset(key);
-        });
-
-        container.appendChild(btn);
+function highlightActivePreset(key) {
+    // 選択中のプリセットを視覚的に強調（任意）
+    Array.from(presetBarEl?.querySelectorAll?.("button[data-preset]") || []).forEach(b => {
+        b.style.fontWeight = (b.getAttribute("data-preset") === key) ? "600" : "";
     });
 }
 
@@ -466,10 +473,11 @@ function applyFixedPreset(key) {
 function getFixedPresets() {
     return {
         beginner: { count: "10", difficulties: [1], langs: ["csharp"], genres: ["conditions"], beginner: true },
-        standard: { count: "10", difficulties: [1, 2], langs: ["csharp"], genres: ["conditions", "loops"], beginner: false },
-        advanced: { count: "10", difficulties: [2, 3], langs: ["csharp"], genres: ["conditions", "loops", "arrays", "strings"], beginner: false },
+        standard: { count: "10", difficulties: [1, 2], langs: ["csharp"], genres: ["conditions", "loops", "arrays"], beginner: false },
+        advanced: { count: "10", difficulties: [2, 3], langs: ["csharp"], genres: ["conditions", "loops", "arrays"], beginner: false },
         conditionsOnly: { count: "10", difficulties: [1, 2, 3], langs: ["csharp"], genres: ["conditions"], beginner: false },
-        mixBasics: { count: "10", difficulties: [1], langs: ["csharp"], genres: ["conditions", "loops", "arrays", "strings"], beginner: true }
+        arraysOnly: { count: "10", difficulties: [1, 2, 3], langs: ["csharp"], genres: ["arrays"], beginner: false },
+        mixBasics: { count: "10", difficulties: [1], langs: ["csharp"], genres: ["conditions", "loops", "arrays"], beginner: true }
     };
 }
 
@@ -543,6 +551,7 @@ const PRESET_LABELS_JP = {
     standard: "標準",
     advanced: "応用",
     conditionsOnly: "条件式のみ",
+    arraysOnly: "配列のみ",
     mixBasics: "基礎ミックス"
 };
 
