@@ -1,4 +1,12 @@
 const TOTAL_TIME = 10 * 60;
+const SEC_PER_QUESTION = 60;
+const MIN_QUIZ_TIME = 2 * 60;
+const MAX_QUIZ_TIME = 20 * 60;
+
+function timeLimitForCount(count) {
+    const n = Math.max(1, Number(count) || 1);
+    return Math.max(MIN_QUIZ_TIME, Math.min(MAX_QUIZ_TIME, n * SEC_PER_QUESTION));
+}
 
 // localStorage keys
 const LS_KEY_BEGINNER = "fe_quiz_beginnerMode";
@@ -272,6 +280,18 @@ function applyStudentLockUI() {
     if (lockBadgeEl) lockBadgeEl.style.display = "inline-block";
     if (lockNoteEl) lockNoteEl.style.display = "block";
 
+    const presetPanelEl = document.getElementById("presetPanel");
+    if (presetPanelEl) presetPanelEl.style.display = "none";
+
+    const setupCountsDiffEl = document.getElementById("setupCountsDiff");
+    if (setupCountsDiffEl) setupCountsDiffEl.style.display = "none";
+
+    const setupDetailsEl = document.getElementById("setupDetails");
+    if (setupDetailsEl) setupDetailsEl.style.display = "none";
+
+    const setupFooterEl = document.getElementById("setupFooter");
+    if (setupFooterEl) setupFooterEl.style.display = "none";
+
     // 保存/削除/IO を隠す
     if (presetManageSectionEl) presetManageSectionEl.style.display = "none";
     if (presetIOSectionEl) presetIOSectionEl.style.display = "none";
@@ -378,6 +398,17 @@ function initSetupOptions(list) {
     // value は内部キーのまま、表示ラベルだけ日本語化
     for (const x of langs) appendCheck(langBoxEl, "langChk", x, toLangLabel(x));
     for (const x of genres) appendCheck(genreBoxEl, "genreChk", x, toGenreLabel(x));
+
+    const langFilterWrapEl = document.getElementById("langFilterWrap");
+    if (langFilterWrapEl && langs.length <= 1) {
+        langFilterWrapEl.style.display = "none";
+    }
+
+    if (teacherLinkExampleEl) {
+        teacherLinkExampleEl.innerHTML =
+            `授業用リンク例（先生用メモ）：<br>` +
+            `<span class="k">?student=1&preset=conditionsOnly&fresh=1&autostart=1&qver=${escapeHtml(qver)}</span>`;
+    }
 
     wireAllLogic(langBoxEl, "langChk", langAllEl);
     wireAllLogic(genreBoxEl, "genreChk", genreAllEl);
@@ -920,7 +951,7 @@ function shuffle(arr) {
 function startMainMode(pickedQuestions) {
     mode = "main";
     questions = pickedQuestions.slice();
-    resetRunState(TOTAL_TIME);
+    resetRunState(timeLimitForCount(questions.length));
 
     setupPanelEl.style.display = "none";
 
@@ -937,7 +968,7 @@ function startReviewMode(wrongQuestions) {
     mode = "review";
     questions = wrongQuestions.slice();
 
-    const suggested = Math.max(120, Math.min(TOTAL_TIME, questions.length * 60));
+    const suggested = timeLimitForCount(questions.length);
     resetRunState(suggested);
 
     beginnerToggleEl.checked = true;

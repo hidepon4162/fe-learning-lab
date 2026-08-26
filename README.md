@@ -28,8 +28,8 @@ URL に `?teacher=1` を付けて開く
 
 | 用途                       | リンク例                                                             |
 | -------------------------- | -------------------------------------------------------------------- |
-| 授業（最初から・自動開始） | `?student=1&preset=conditionsOnly&fresh=1&autostart=1&qver=20260209` |
-| 自宅復習（続きから可）     | `?student=1&preset=conditionsOnly&autostart=1&qver=20260209`         |
+| 授業（最初から・自動開始） | `?student=1&preset=conditionsOnly&fresh=1&autostart=1`         |
+| 自宅復習（続きから可）     | `?student=1&preset=conditionsOnly&autostart=1`                 |
 
 生徒用は設定変更不可・タブ1つのみ利用を推奨。
 
@@ -42,7 +42,7 @@ URL に `?teacher=1` を付けて開く
 | preset=XXX  | 強制プリセット（presets/ のファイル名、拡張子なし） |
 | autostart=1 | 起動直後に開始                                      |
 | fresh=1     | 必ず最初から（保存セッション破棄）                  |
-| qver=...    | questions.json のキャッシュ対策                     |
+| qver=...    | questions.json のキャッシュ対策（省略時は起動日）           |
 
 ## プリセットの仕組み
 

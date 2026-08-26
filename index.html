@@ -1,27 +1,93 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-theme="night">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>FE Classroom Quiz</title>
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem("glowadder-theme");
+                document.documentElement.setAttribute(
+                    "data-theme",
+                    t === "classroom" ? "classroom" : "night"
+                );
+            } catch (e) { }
+        })();
+    </script>
     <style>
-        :root {
+        :root,
+        html[data-theme="night"] {
+            color-scheme: dark;
+            --bg: #0b1220;
+            --bg-grad: #17264a;
+            --page-bg: radial-gradient(1000px 600px at 20% 0%, var(--bg-grad), var(--bg));
+            --text: #e8eefc;
+            --muted: #b7c3e6;
+            --line: rgba(255, 255, 255, 0.12);
+            --card: rgba(16, 26, 48, 0.88);
+            --accent: #8ab4ff;
+            --ok: #7ee787;
+            --ng: #ff6b81;
+            --warn: #ffd166;
+            --top: rgba(16, 26, 48, 0.92);
+            --control: rgba(255, 255, 255, 0.06);
+            --control-hover: rgba(138, 180, 255, 0.45);
+            --inset: rgba(0, 0, 0, 0.18);
+            --code-bg: rgba(0, 0, 0, 0.22);
+            --pill-bg: rgba(138, 180, 255, 0.16);
+            --pill-line: rgba(138, 180, 255, 0.28);
+            --tag-bg: rgba(255, 255, 255, 0.04);
+            --ok-line: rgba(126, 231, 135, 0.35);
+            --ok-bg: rgba(126, 231, 135, 0.12);
+            --ng-line: rgba(255, 107, 129, 0.35);
+            --ng-bg: rgba(255, 107, 129, 0.12);
+            --warn-line: rgba(255, 209, 102, 0.35);
+            --warn-bg: rgba(255, 209, 102, 0.12);
+            --warn-text: #ffd166;
+            --lift: rgba(255, 255, 255, 0.04);
+            --seg-split: rgba(255, 255, 255, 0.08);
+            --seg-active: rgba(138, 180, 255, 0.16);
+        }
+
+        html[data-theme="classroom"] {
+            color-scheme: light;
             --bg: #eef3fb;
-            --card: #ffffff;
-            --line: #c9d6ee;
+            --bg-grad: #f7f9fd;
+            --page-bg: linear-gradient(180deg, var(--bg-grad), var(--bg));
             --text: #1a2744;
             --muted: #5a6b8a;
+            --line: #c9d6ee;
+            --card: #ffffff;
             --accent: #3b6fd8;
             --ok: #1a9f5c;
             --ng: #e03d55;
             --warn: #b57a00;
+            --top: rgba(255, 255, 255, .92);
+            --control: #ffffff;
+            --control-hover: rgba(122, 162, 255, .55);
+            --inset: #f7f9fd;
+            --code-bg: #f3f6fc;
+            --pill-bg: rgba(122, 162, 255, .12);
+            --pill-line: rgba(122, 162, 255, .25);
+            --tag-bg: #eef3fb;
+            --ok-line: rgba(33, 199, 122, .35);
+            --ok-bg: rgba(33, 199, 122, .10);
+            --ng-line: rgba(255, 90, 112, .35);
+            --ng-bg: rgba(255, 90, 112, .10);
+            --warn-line: rgba(255, 209, 102, .35);
+            --warn-bg: rgba(255, 209, 102, .10);
+            --warn-text: #7a5400;
+            --lift: #f3f6fc;
+            --seg-split: #c9d6ee;
+            --seg-active: rgba(59, 111, 216, 0.12);
         }
 
         body {
             margin: 0;
             font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", sans-serif;
-            background: linear-gradient(180deg, #f7f9fd, var(--bg));
+            background: var(--page-bg);
             color: var(--text);
         }
 
@@ -36,13 +102,22 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            flex-wrap: wrap;
             padding: 14px 16px;
-            background: rgba(255, 255, 255, .92);
+            background: var(--top);
             border: 1px solid var(--line);
             border-radius: 14px;
             position: sticky;
             top: 10px;
             backdrop-filter: blur(8px);
+        }
+
+        .topEnd {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .title {
@@ -59,8 +134,8 @@
             font-size: 12px;
             padding: 3px 8px;
             border-radius: 999px;
-            background: rgba(255, 209, 102, .15);
-            border: 1px solid rgba(255, 209, 102, .35);
+            background: var(--warn-bg);
+            border: 1px solid var(--warn-line);
             color: var(--warn);
         }
 
@@ -75,8 +150,41 @@
         .pill {
             padding: 4px 10px;
             border-radius: 999px;
-            background: rgba(122, 162, 255, .12);
-            border: 1px solid rgba(122, 162, 255, .25);
+            background: var(--pill-bg);
+            border: 1px solid var(--pill-line);
+        }
+
+        .seg {
+            display: inline-flex;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--lift);
+            flex-shrink: 0;
+        }
+
+        .seg button {
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            color: var(--muted);
+            padding: 7px 10px;
+            cursor: pointer;
+            font-size: 13px;
+            border-right: 1px solid var(--seg-split);
+        }
+
+        .seg button:last-child {
+            border-right: 0;
+        }
+
+        .seg button.active {
+            color: var(--text);
+            background: var(--seg-active);
+        }
+
+        .seg button:hover {
+            border-color: var(--seg-split);
         }
 
         .grid {
@@ -104,6 +212,10 @@
             flex: 0 0 auto;
         }
 
+        #setupCountsDiff {
+            display: contents;
+        }
+
         .small {
             font-size: 12px;
             color: var(--muted);
@@ -126,12 +238,13 @@
         select,
         input,
         textarea {
-            background: #ffffff;
+            background: var(--control);
             color: var(--text);
             border: 1px solid var(--line);
             border-radius: 10px;
             padding: 10px 12px;
             font-size: 14px;
+            accent-color: var(--accent);
         }
 
         button {
@@ -139,7 +252,7 @@
         }
 
         button:hover {
-            border-color: rgba(122, 162, 255, .55);
+            border-color: var(--control-hover);
         }
 
         button:disabled {
@@ -184,7 +297,7 @@
             padding: 10px 12px;
             border: 1px solid var(--line);
             border-radius: 12px;
-            background: #f7f9fd;
+            background: var(--inset);
         }
 
         #quiz {
@@ -207,11 +320,11 @@
         }
 
         .choice:hover {
-            border-color: rgba(122, 162, 255, .40);
+            border-color: var(--control-hover);
         }
 
         pre.code {
-            background: #f3f6fc;
+            background: var(--code-bg);
             border: 1px solid var(--line);
             border-radius: 12px;
             padding: 12px;
@@ -229,7 +342,7 @@
             border: 1px solid var(--line);
             border-radius: 14px;
             padding: 14px;
-            background: #f7f9fd;
+            background: var(--inset);
         }
 
         .result-badges {
@@ -245,19 +358,19 @@
             border-radius: 999px;
             border: 1px solid var(--line);
             color: var(--muted);
-            background: #eef3fb;
+            background: var(--tag-bg);
         }
 
         .tag.ok {
             color: var(--ok);
-            border-color: rgba(33, 199, 122, .35);
-            background: rgba(33, 199, 122, .10);
+            border-color: var(--ok-line);
+            background: var(--ok-bg);
         }
 
         .tag.ng {
             color: var(--ng);
-            border-color: rgba(255, 90, 112, .35);
-            background: rgba(255, 90, 112, .10);
+            border-color: var(--ng-line);
+            background: var(--ng-bg);
         }
 
         .jp {
@@ -265,7 +378,7 @@
             padding: 10px 12px;
             border-radius: 12px;
             border: 1px dashed var(--line);
-            background: #f3f6fc;
+            background: var(--code-bg);
             color: var(--text);
         }
 
@@ -274,9 +387,9 @@
             margin-top: 8px;
             padding: 10px 12px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 209, 102, .35);
-            background: rgba(255, 209, 102, .10);
-            color: #7a5400;
+            border: 1px solid var(--warn-line);
+            background: var(--warn-bg);
+            color: var(--warn-text);
         }
     </style>
 </head>
@@ -288,11 +401,17 @@
                 基本情報 技術者試験 演習クイズ
                 <span id="lockBadge" class="badge">生徒用モード</span>
             </div>
-            <div class="meta">
-                <span id="progress" class="pill">未開始</span>
-                <span id="timer" class="pill">-</span>
-                <span id="topics" class="pill">カテゴリ：-</span>
-                <span id="difficulty" class="pill">難易度：-</span>
+            <div class="topEnd">
+                <div class="meta">
+                    <span id="progress" class="pill">未開始</span>
+                    <span id="timer" class="pill">-</span>
+                    <span id="topics" class="pill">カテゴリ：-</span>
+                    <span id="difficulty" class="pill">難易度：-</span>
+                </div>
+                <div class="seg" role="group" aria-label="配色">
+                    <button id="btnThemeNight" type="button" class="active">夜間</button>
+                    <button id="btnThemeClassroom" type="button">教室</button>
+                </div>
             </div>
         </div>
 
@@ -303,7 +422,7 @@
         <div class="grid">
 
             <!-- プリセット -->
-            <div class="panel">
+            <div class="panel" id="presetPanel">
                 <div class="row" id="presetBar">
                     <button class="presetBtn" data-preset="beginner">初級</button>
                     <button class="presetBtn" data-preset="standard">標準</button>
@@ -370,6 +489,7 @@
                         初心者モード（日本語化/補足）
                     </label>
 
+                    <span id="setupCountsDiff">
                     <label>
                         問題数：
                         <select id="countSelect">
@@ -385,14 +505,16 @@
                     <label><input type="checkbox" class="diffChk" value="1" checked>★</label>
                     <label><input type="checkbox" class="diffChk" value="2" checked>★★</label>
                     <label><input type="checkbox" class="diffChk" value="3" checked>★★★</label>
+                    </span>
 
                     <button id="startBtn">開始</button>
                 </div>
 
+                <div id="setupDetails">
                 <div class="hr"></div>
 
                 <div class="row">
-                    <div style="min-width:220px;">
+                    <div id="langFilterWrap" style="min-width:220px;">
                         <label><input type="checkbox" id="langAll" checked> 言語：すべて</label>
                         <div id="langBox" class="checkgrid" style="margin-top:8px;"></div>
                     </div>
@@ -402,11 +524,11 @@
                         <div id="genreBox" class="checkgrid" style="margin-top:8px;"></div>
                     </div>
                 </div>
+                </div>
 
+                <div id="setupFooter">
                 <div class="hr"></div>
-                <div id="teacherLinkExample" class="small" style="display:none;">
-                    授業用リンク例（先生用メモ）：<br>
-                    <span class="k">?student=1&preset=conditionsOnly&fresh=1&autostart=1&qver=20260209</span>
+                <div id="teacherLinkExample" class="small" style="display:none;"></div>
                 </div>
             </div>
 
@@ -422,6 +544,25 @@
         </div>
     </div>
 
+    <script>
+        (function () {
+            var KEY = "glowadder-theme";
+            var btnNight = document.getElementById("btnThemeNight");
+            var btnClassroom = document.getElementById("btnThemeClassroom");
+
+            function applyTheme(theme) {
+                var next = theme === "classroom" ? "classroom" : "night";
+                document.documentElement.setAttribute("data-theme", next);
+                try { localStorage.setItem(KEY, next); } catch (e) { }
+                btnNight.classList.toggle("active", next === "night");
+                btnClassroom.classList.toggle("active", next === "classroom");
+            }
+
+            btnNight.addEventListener("click", function () { applyTheme("night"); });
+            btnClassroom.addEventListener("click", function () { applyTheme("classroom"); });
+            applyTheme(document.documentElement.getAttribute("data-theme"));
+        })();
+    </script>
     <script src="quiz.js"></script>
 </body>
 
