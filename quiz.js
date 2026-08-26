@@ -611,6 +611,18 @@ function toGenreLabel(genre) {
     return GENRE_LABELS_JP[genre] || genre;
 }
 
+const CHOICE_MARKS = ["ア", "イ", "ウ", "エ"];
+
+function choiceMark(index) {
+    return CHOICE_MARKS[index] ?? String(index + 1);
+}
+
+function formatChoiceText(q, index) {
+    const text = q?.choices?.[index];
+    if (text == null || String(text).trim() === "") return "(不明)";
+    return `${choiceMark(index)}  ${text}`;
+}
+
 // ===============================
 // 言語表示名（内部キー → 表示用）
 // ===============================
@@ -1029,42 +1041,27 @@ function showQuestion() {
       <div class="choice">
         <label>
           <input type="radio" name="choice" value="${i}">
+          <span class="choice-mark">${escapeHtml(choiceMark(i))}</span>
           ${escapeHtml(c)}
         </label>
       </div>`;
     });
 
-    if (mode === "main") {
-        const explainId = `explain-main-${q.id}`;
-        html += `
-      <button class="toggleBtn" data-target="${explainId}" data-show="▶ 解説を見る（正解でも確認）" data-hide="▼ 解説を隠す">▶ 解説を見る（正解でも確認）</button>
-      <div id="${explainId}" style="display:none;">
-        ${buildExplanationHtml(q, true)}
-      </div>
-      <div class="small">※採点は下の「採点する」で行います。解説は読み取り確認用です</div>
-    `;
-    }
+    html += `<div class="small">※下の「採点する」で答え合わせします。解説は採点後に表示されます。</div>`;
 
     quizEl.innerHTML = html;
     wireToggleButtons();
 }
 
-function buildExplanationHtml(q, forceShow) {
-    const pseudoText = autoPseudo(q);
-    const pseudoBlock = pseudoText ? `<div class="small"><b>擬似言語：</b>${escapeHtml(pseudoText)}</div>` : "";
-
-    const isHard = (q.difficulty ?? 1) >= 3;
+function buildExplanationHtml(q) {
     const pseudocodeText = autoPseudocode(q);
+    if (!pseudocodeText) return "";
 
     const pseudoCodeId = `pseudocode-any-${q.id}-${Math.random().toString(16).slice(2)}`;
-    const pseudoCodeBlock = (pseudocodeText && (isHard || forceShow))
-        ? `
-      <button class="toggleBtn" data-target="${pseudoCodeId}" data-show="▶ 疑似コード（試験形式）を表示" data-hide="▼ 疑似コードを隠す">▶ 疑似コード（試験形式）を表示</button>
+    return `
+      <button class="toggleBtn" data-target="${pseudoCodeId}" data-show="▶ 擬似言語（試験形式）を表示" data-hide="▼ 擬似言語を隠す">▶ 擬似言語（試験形式）を表示</button>
       <pre class="code" id="${pseudoCodeId}" style="display:none;"><code>${escapeHtml(pseudocodeText)}</code></pre>
-    `
-        : "";
-
-    return `${pseudoBlock}${pseudoCodeBlock}`;
+    `;
 }
 
 // ----------------------------
@@ -1165,8 +1162,8 @@ function showReviewFeedback(log) {
     const okNgText = log.correct ? "正解" : "不正解";
     const okNgClass = log.correct ? "ok" : "ng";
 
-    const chosenText = q.choices?.[log.chosen] ?? "(不明)";
-    const correctText = q.choices?.[log.correctIndex] ?? "(不明)";
+    const chosenText = formatChoiceText(q, log.chosen);
+    const correctText = formatChoiceText(q, log.correctIndex);
 
     const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
     const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
@@ -1177,21 +1174,6 @@ function showReviewFeedback(log) {
         : "";
 
     const hintBlock = (!log.correct && q.hint) ? `<div class="small"><b>ヒント：</b>${escapeHtml(q.hint)}</div>` : "";
-
-    const pseudoText = autoPseudo(q);
-    const pseudoBlock = (!log.correct && pseudoText) ? `<div class="small"><b>擬似言語：</b>${escapeHtml(pseudoText)}</div>` : "";
-
-    const isHard = (q.difficulty ?? 1) >= 3;
-    const pseudocodeText = autoPseudocode(q);
-    const shouldShowPseudoCode = (!log.correct) && isHard && pseudocodeText;
-
-    const pseudoCodeId = `pseudocode-review-${q.id}`;
-    const pseudoCodeBlock = shouldShowPseudoCode
-        ? `
-      <button class="toggleBtn" data-target="${pseudoCodeId}" data-show="▶ 疑似コード（試験形式）を表示" data-hide="▼ 疑似コードを隠す">▶ 疑似コード（試験形式）を表示</button>
-      <pre class="code" id="${pseudoCodeId}" style="display:none;"><code>${escapeHtml(pseudocodeText)}</code></pre>
-    `
-        : "";
 
     quizEl.innerHTML = `
     <div class="result-item">
@@ -1204,17 +1186,16 @@ function showReviewFeedback(log) {
         <span class="tag">${escapeHtml("★".repeat(q.difficulty ?? 1))}</span>
       </div>
 
-      <div class="small"><b>問題：</b>${escapeHtml(q.question)}</div>
+      <div><b>問題：</b>${escapeHtml(q.question)}</div>
       ${codeBlock}
       ${exprBlock}
       ${jpBlock}
 
-      <div class="small"><b>あなたの選択：</b>${escapeHtml(chosenText)}</div>
-      <div class="small"><b>正解：</b>${escapeHtml(correctText)}</div>
+      <div><b>あなたの選択：</b>${escapeHtml(chosenText)}</div>
+      <div><b>正解：</b>${escapeHtml(correctText)}</div>
 
       ${hintBlock}
-      ${pseudoBlock}
-      ${pseudoCodeBlock}
+      ${buildExplanationHtml(q)}
 
       <div class="small">※復習モードは「採点する」→解説確認→「次へ」</div>
     </div>
@@ -1232,8 +1213,8 @@ function showMainFeedback(log) {
     const okNgText = log.correct ? "正解" : "不正解";
     const okNgClass = log.correct ? "ok" : "ng";
 
-    const chosenText = q.choices?.[log.chosen] ?? "(不明)";
-    const correctText = q.choices?.[log.correctIndex] ?? "(不明)";
+    const chosenText = formatChoiceText(q, log.chosen);
+    const correctText = formatChoiceText(q, log.correctIndex);
 
     const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
     const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
@@ -1244,15 +1225,6 @@ function showMainFeedback(log) {
         : "";
 
     const hintBlock = (!log.correct && q.hint) ? `<div class="small"><b>ヒント：</b>${escapeHtml(q.hint)}</div>` : "";
-
-    // 解説（読み取り確認）
-    const explainId = `explain-main-${q.id}`;
-    const explainBtn = `
-      <button class="toggleBtn" data-target="${explainId}" data-show="▶ 解説を見る（読み取り確認）" data-hide="▼ 解説を隠す">▶ 解説を見る（読み取り確認）</button>
-      <div id="${explainId}" style="display:none;">
-        ${buildExplanationHtml(q, true)}
-      </div>
-    `;
 
     quizEl.innerHTML = `
     <div class="result-item">
@@ -1265,16 +1237,16 @@ function showMainFeedback(log) {
         <span class="tag">${escapeHtml("★".repeat(q.difficulty ?? 1))}</span>
       </div>
 
-      <div class="small"><b>問題：</b>${escapeHtml(q.question)}</div>
+      <div><b>問題：</b>${escapeHtml(q.question)}</div>
       ${codeBlock}
       ${exprBlock}
       ${jpBlock}
 
-      <div class="small"><b>あなたの選択：</b>${escapeHtml(chosenText)}</div>
-      <div class="small"><b>正解：</b>${escapeHtml(correctText)}</div>
+      <div><b>あなたの選択：</b>${escapeHtml(chosenText)}</div>
+      <div><b>正解：</b>${escapeHtml(correctText)}</div>
 
       ${hintBlock}
-      ${explainBtn}
+      ${buildExplanationHtml(q)}
 
       <div class="small">※「次へ」で次の問題に進みます</div>
     </div>

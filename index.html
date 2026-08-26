@@ -187,6 +187,25 @@
             background: #f7f9fd;
         }
 
+        #quiz {
+            font-size: 16px;
+            color: var(--text);
+            line-height: 1.65;
+        }
+
+        #quiz h3 {
+            font-size: 1.15em;
+            font-weight: 700;
+            margin: 0 0 12px;
+        }
+
+        .choice-mark {
+            display: inline-block;
+            min-width: 1.75em;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
         .choice:hover {
             border-color: rgba(122, 162, 255, .40);
         }
@@ -393,7 +412,7 @@
 
             <!-- 問題表示 -->
             <div class="panel">
-                <div id="quiz" class="small">出題設定を選んで「開始」を押してください。</div>
+                <div id="quiz">出題設定を選んで「開始」を押してください。</div>
                 <div class="hr"></div>
                 <div class="row">
                     <button id="nextBtn" style="display:none;">次の問題</button>
