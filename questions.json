@@ -10,7 +10,7 @@
         "difficulty": 1,
         "question": "次の式の評価結果として正しいものはどれ？（int x = 5; int y = 10;）",
         "expr": "x < y && x == 5",
-        "pseudocode": "if ((x ＜ y) and (x ＝ 5))\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if ((x ＜ y) and (x ＝ 5))\n  true\nelse\n  false\nendif",
         "choices": [
             "true",
             "false",
@@ -32,14 +32,14 @@
         "difficulty": 1,
         "question": "次の式の評価結果として正しいものはどれ？（int a = 0;）",
         "expr": "a == 0 || a > 10",
-        "pseudocode": "if ((a ＝ 0) or (a ＞ 10))\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if ((a ＝ 0) or (a ＞ 10))\n  true\nelse\n  false\nendif",
         "choices": [
-            "true",
-            "false",
             "コンパイルエラー",
-            "実行時エラー"
+            "true",
+            "実行時エラー",
+            "false"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "a が 0 と等しい、または a が 10 より大きいかどうかを判定する（|| はどちらか一方が成り立てば成立）。",
         "jpResult": "true"
     },
@@ -53,14 +53,14 @@
         "difficulty": 1,
         "question": "次の式の評価結果として正しいものはどれ？（int score = 60;）",
         "expr": "score >= 60",
-        "pseudocode": "if (score ≧ 60)\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if (score ≧ 60)\n  true\nelse\n  false\nendif",
         "choices": [
-            "true",
+            "実行時エラー",
             "false",
-            "コンパイルエラー",
-            "実行時エラー"
+            "true",
+            "コンパイルエラー"
         ],
-        "answer": 0,
+        "answer": 2,
         "jp": "score が 60 以上かどうか（>=）を判定する。",
         "jpResult": "true"
     },
@@ -74,14 +74,14 @@
         "difficulty": 2,
         "question": "次の式の評価結果として正しいものはどれ？（bool ok = false;）",
         "expr": "!ok",
-        "pseudocode": "if (not ok)\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if (not ok)\n  true\nelse\n  false\nendif",
         "choices": [
-            "true",
             "false",
             "コンパイルエラー",
-            "実行時エラー"
+            "実行時エラー",
+            "true"
         ],
-        "answer": 0,
+        "answer": 3,
         "jp": "否定演算子（!）は真偽値を反転する。",
         "jpResult": "true"
     },
@@ -95,12 +95,12 @@
         "difficulty": 2,
         "question": "次の式の評価結果として正しいものはどれ？（bool a=true; bool b=false; bool c=true;）",
         "expr": "a || b && c",
-        "pseudocode": "if (a or (b and c))\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if (a or (b and c))\n  true\nelse\n  false\nendif",
         "choices": [
             "true",
-            "false",
             "コンパイルエラー",
-            "実行時エラー"
+            "実行時エラー",
+            "false"
         ],
         "answer": 0,
         "jp": "演算子の優先順位は && が || より先。まず b&&c を評価してから a||(...) を評価する。",
@@ -117,14 +117,14 @@
         "difficulty": 2,
         "question": "次の式の評価結果として正しいものはどれ？（bool a=true; bool b=false; bool c=true;）",
         "expr": "(a || b) && c",
-        "pseudocode": "if ((a or b) and c)\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if ((a or b) and c)\n  true\nelse\n  false\nendif",
         "choices": [
+            "実行時エラー",
             "true",
             "false",
-            "コンパイルエラー",
-            "実行時エラー"
+            "コンパイルエラー"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "括弧は優先して評価される。(a||b) を先に評価し、その結果と c を && で結合する。",
         "jpResult": "true"
     },
@@ -138,15 +138,15 @@
         "difficulty": 2,
         "question": "次の式の評価結果として正しいものはどれ？（int x = 0;）",
         "expr": "x != 0 && (10 / x) > 1",
-        "pseudocode": "if ((x ≠ 0) and ((10 ÷ x) ＞ 1))\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if ((x ≠ 0) and ((10 ÷ x) ＞ 1))  // C#の && は短絡評価。擬似言語の and は短絡を保証しない\n  true\nelse\n  false\nendif",
         "choices": [
             "true",
-            "false",
             "コンパイルエラー",
+            "false",
             "実行時エラー"
         ],
-        "answer": 1,
-        "jp": "&& は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。",
+        "answer": 2,
+        "jp": "&& は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。C# ではゼロ除算にならない。擬似言語の and は短絡を保証しないことがある。",
         "jpResult": "false"
     },
     {
@@ -159,15 +159,15 @@
         "difficulty": 2,
         "question": "次の式の評価結果として正しいものはどれ？（int x = 0;）",
         "expr": "x == 0 || (10 / x) > 1",
-        "pseudocode": "if ((x ＝ 0) or ((10 ÷ x) ＞ 1))\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if ((x ＝ 0) or ((10 ÷ x) ＞ 1))  // C#の || は短絡評価。擬似言語の or は短絡を保証しない\n  true\nelse\n  false\nendif",
         "choices": [
-            "true",
-            "false",
             "コンパイルエラー",
-            "実行時エラー"
+            "実行時エラー",
+            "false",
+            "true"
         ],
-        "answer": 0,
-        "jp": "|| は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。",
+        "answer": 3,
+        "jp": "|| は短絡評価する。左側で全体の結果が確定する場合、右側（10/x）は評価されない。C# ではゼロ除算にならない。擬似言語の or は短絡を保証しないことがある。",
         "jpResult": "true"
     },
     {
@@ -178,15 +178,15 @@
             "char",
             "比較"
         ],
-        "difficulty": 3,
+        "difficulty": 2,
         "question": "次の式の評価結果として正しいものはどれ？（char ch = 'A';）",
         "expr": "ch >= 'A' && ch <= 'Z'",
-        "pseudocode": "if ((ch ≧ 'A') and (ch ≦ 'Z'))\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if ((ch ≧ 'A') and (ch ≦ 'Z'))\n  true\nelse\n  false\nendif",
         "choices": [
             "true",
+            "実行時エラー",
             "false",
-            "コンパイルエラー",
-            "実行時エラー"
+            "コンパイルエラー"
         ],
         "answer": 0,
         "jp": "文字（char）は文字コードで比較できる。ch が 'A'〜'Z' の範囲に入っているかを判定する。",
@@ -200,17 +200,17 @@
             "bool",
             "比較"
         ],
-        "difficulty": 3,
+        "difficulty": 1,
         "question": "次の式の評価結果として正しいものはどれ？（bool p=true; bool q=true;）",
         "expr": "p == q",
-        "pseudocode": "if (p ＝ q)\n  真\nelse\n  偽\nendif",
+        "pseudocode": "if (p ＝ q)\n  true\nelse\n  false\nendif",
         "choices": [
-            "true",
             "false",
+            "true",
             "コンパイルエラー",
             "実行時エラー"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "== は2つの bool が同じ値かどうかを判定する。",
         "jpResult": "true"
     },
@@ -226,12 +226,12 @@
         "code": "int x = 3;\n\nif (x > 5)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}",
         "pseudocode": "x ← 3\nif (x ＞ 5)\n  \"A\" を出力\nelse\n  \"B\" を出力\nendif",
         "choices": [
-            "A",
-            "B",
             "何も出力されない",
-            "コンパイルエラー"
+            "コンパイルエラー",
+            "B",
+            "A"
         ],
-        "answer": 1,
+        "answer": 2,
         "jp": "if/else は条件の真偽によって、出力する分岐（A/B）が決まる。",
         "jpResult": "B"
     },
@@ -247,12 +247,12 @@
         "code": "int a = 5;\nint b = 8;\n\nif (a < 10 && b < 5)\n{\n    Console.WriteLine(\"OK\");\n}\nelse\n{\n    Console.WriteLine(\"NG\");\n}",
         "pseudocode": "a ← 5\nb ← 8\nif ((a ＜ 10) and (b ＜ 5))\n  \"OK\" を出力\nelse\n  \"NG\" を出力\nendif",
         "choices": [
+            "実行時エラー",
             "OK",
-            "NG",
             "何も出力されない",
-            "実行時エラー"
+            "NG"
         ],
-        "answer": 1,
+        "answer": 3,
         "jp": "&& は両方の条件が成り立つときだけ if 側に入る。どちらか一方でも成り立たないと else 側になる。",
         "jpResult": "NG"
     },
@@ -289,10 +289,10 @@
         "code": "int score = 75;\n\nif (score >= 60)\n{\n    if (score >= 80)\n    {\n        Console.WriteLine(\"A\");\n    }\n    else\n    {\n        Console.WriteLine(\"B\");\n    }\n}",
         "pseudocode": "score ← 75\nif (score ≧ 60)\n  if (score ≧ 80)\n    \"A\" を出力\n  else\n    \"B\" を出力\n  endif\nendif",
         "choices": [
-            "A",
-            "B",
             "何も出力されない",
-            "実行時エラー"
+            "B",
+            "実行時エラー",
+            "A"
         ],
         "answer": 1,
         "jp": "ネストした if は外側の条件を満たした場合のみ内側に進む。内側の条件により出力（A/B）が決まる。",
@@ -310,12 +310,12 @@
         "code": "int x = 10;\n\nif (x < 5)\n{\n    Console.WriteLine(\"A\");\n}\nelse if (x < 15)\n{\n    Console.WriteLine(\"B\");\n}\nelse\n{\n    Console.WriteLine(\"C\");\n}",
         "pseudocode": "x ← 10\nif (x ＜ 5)\n  \"A\" を出力\nelseif (x ＜ 15)\n  \"B\" を出力\nelse\n  \"C\" を出力\nendif",
         "choices": [
+            "何も出力されない",
             "A",
             "B",
-            "C",
-            "何も出力されない"
+            "C"
         ],
-        "answer": 1,
+        "answer": 2,
         "jp": "else if は上から順に条件を判定し、最初に当てはまった分岐の出力（A/B/C）が選ばれる。",
         "jpResult": "B"
     },
@@ -329,15 +329,15 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "int x = 0;\n\nif (x != 0 && (10 / x) > 1)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}",
-        "pseudocode": "x ← 0\nif ((x ≠ 0) and ((10 ÷ x) ＞ 1))\n  \"A\" を出力\nelse\n  \"B\" を出力\nendif",
+        "pseudocode": "x ← 0\nif ((x ≠ 0) and ((10 ÷ x) ＞ 1))  // C#の && は短絡評価。擬似言語の and は短絡を保証しない\n  \"A\" を出力\nelse\n  \"B\" を出力\nendif",
         "choices": [
             "A",
-            "B",
             "実行時エラー",
-            "コンパイルエラー"
+            "コンパイルエラー",
+            "B"
         ],
-        "answer": 1,
-        "jp": "&& の短絡評価により、左側の条件で結果が確定する場合は右側（10/x）を評価しない。",
+        "answer": 3,
+        "jp": "&& の短絡評価により、左側の条件で結果が確定する場合は右側（10/x）を評価しない。C# では実行時エラーにならない。擬似言語の and は短絡を保証しないことがある。",
         "jpResult": "B"
     },
     {
@@ -350,12 +350,12 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "bool flag = false;\n\nif (!flag)\n{\n    Console.WriteLine(\"ON\");\n}\nelse\n{\n    Console.WriteLine(\"OFF\");\n}",
-        "pseudocode": "flag ← 偽\nif (not flag)\n  \"ON\" を出力\nelse\n  \"OFF\" を出力\nendif",
+        "pseudocode": "flag ← false\nif (not flag)\n  \"ON\" を出力\nelse\n  \"OFF\" を出力\nendif",
         "choices": [
             "ON",
-            "OFF",
             "何も出力されない",
-            "実行時エラー"
+            "実行時エラー",
+            "OFF"
         ],
         "answer": 0,
         "jp": "否定（!）によって条件の真偽が反転し、if/else のどちらに入るかが決まる。",
@@ -368,17 +368,17 @@
         "topics": [
             "char比較"
         ],
-        "difficulty": 3,
+        "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "char c = 'g';\n\nif (c >= 'a' && c <= 'z')\n{\n    Console.WriteLine(\"lower\");\n}\nelse\n{\n    Console.WriteLine(\"other\");\n}",
         "pseudocode": "c ← 'g'\nif ((c ≧ 'a') and (c ≦ 'z'))\n  \"lower\" を出力\nelse\n  \"other\" を出力\nendif",
         "choices": [
+            "実行時エラー",
             "lower",
             "other",
-            "何も出力されない",
-            "実行時エラー"
+            "何も出力されない"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "char の範囲比較で、英小文字（'a'〜'z'）に入っているかを判定して出力が決まる。",
         "jpResult": "lower"
     },
@@ -392,7 +392,7 @@
         "difficulty": 3,
         "question": "次のコードの結果はどれ？",
         "code": "int x = 1;\n\nif (x)\n{\n    Console.WriteLine(\"A\");\n}",
-        "pseudocode": "x ← 1\nif (x)  ← 擬似言語では数値で条件判定可能（C#では不可）\n  \"A\" を出力\nendif",
+        "pseudocode": "x ← 1\nif (x)  // 擬似言語では数値を条件にできることがある。C#の if は bool のみ\n  \"A\" を出力\nendif",
         "choices": [
             "Aが出る",
             "何も出力されない",
@@ -413,16 +413,144 @@
         "difficulty": 3,
         "question": "次のコードの出力はどれ？",
         "code": "int x = 5;\n\nif (x > 0)\n    Console.WriteLine(\"A\");\n\nConsole.WriteLine(\"B\");",
-        "pseudocode": "x ← 5\nif (x ＞ 0)\n  \"A\" を出力\nendif\n\"B\" を出力  ← if の外（無条件で実行）",
+        "pseudocode": "x ← 5\nif (x ＞ 0)\n  \"A\" を出力\nendif\n\"B\" を出力  // if の外（無条件で実行）",
         "choices": [
-            "Aのみ",
             "Bのみ",
-            "AとB",
-            "何も出力されない"
+            "何も出力されない",
+            "Aのみ",
+            "AとB"
         ],
-        "answer": 2,
+        "answer": 3,
         "jp": "波括弧がない場合、if に属するのは直後の1文だけ。2行目は条件に関係なく実行される。",
         "jpResult": "AとB"
+    },
+    {
+        "id": "cond-021",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "比較"
+        ],
+        "difficulty": 1,
+        "question": "次の式の評価結果として正しいものはどれ？（int age = 15;）",
+        "expr": "age >= 18",
+        "pseudocode": "if (age ≧ 18)\n  true\nelse\n  false\nendif",
+        "choices": [
+            "false",
+            "実行時エラー",
+            "true",
+            "コンパイルエラー"
+        ],
+        "answer": 0,
+        "jp": "age が 18 以上かどうかを判定する。15 は 18 未満なので偽。",
+        "jpResult": "false"
+    },
+    {
+        "id": "cond-022",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "比較"
+        ],
+        "difficulty": 1,
+        "question": "次の式の評価結果として正しいものはどれ？（int n = 10;）",
+        "expr": "n < 5",
+        "pseudocode": "if (n ＜ 5)\n  true\nelse\n  false\nendif",
+        "choices": [
+            "true",
+            "false",
+            "コンパイルエラー",
+            "実行時エラー"
+        ],
+        "answer": 1,
+        "jp": "n が 5 より小さいかどうかを判定する。10 は 5 より大きいので偽。",
+        "jpResult": "false"
+    },
+    {
+        "id": "cond-023",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "等価"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "int x = 8;\n\nif (x == 8)\n{\n    Console.WriteLine(\"YES\");\n}\nelse\n{\n    Console.WriteLine(\"NO\");\n}",
+        "pseudocode": "x ← 8\nif (x ＝ 8)\n  \"YES\" を出力\nelse\n  \"NO\" を出力\nendif",
+        "choices": [
+            "何も出力されない",
+            "コンパイルエラー",
+            "YES",
+            "NO"
+        ],
+        "answer": 2,
+        "jp": "x が 8 と等しいので if 側に入り、YES が出力される。",
+        "jpResult": "YES"
+    },
+    {
+        "id": "cond-024",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "否定",
+            "比較"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "int a = 3;\nint b = 3;\n\nif (a != b)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}",
+        "pseudocode": "a ← 3\nb ← 3\nif (a ≠ b)\n  \"A\" を出力\nelse\n  \"B\" を出力\nendif",
+        "choices": [
+            "コンパイルエラー",
+            "A",
+            "何も出力されない",
+            "B"
+        ],
+        "answer": 3,
+        "jp": "!= は等しくないときに真。a と b はどちらも 3 なので条件は偽になり、else 側の B が出力される。",
+        "jpResult": "B"
+    },
+    {
+        "id": "cond-025",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "境界値",
+            "else"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "int score = 50;\n\nif (score >= 60)\n{\n    Console.WriteLine(\"合格\");\n}\nelse\n{\n    Console.WriteLine(\"不合格\");\n}",
+        "pseudocode": "score ← 50\nif (score ≧ 60)\n  \"合格\" を出力\nelse\n  \"不合格\" を出力\nendif",
+        "choices": [
+            "不合格",
+            "合格",
+            "何も出力されない",
+            "コンパイルエラー"
+        ],
+        "answer": 0,
+        "jp": "score が 60 以上なら合格。50 は 60 未満なので else 側の不合格になる。",
+        "jpResult": "不合格"
+    },
+    {
+        "id": "cond-026",
+        "lang": "csharp",
+        "genre": "conditions",
+        "topics": [
+            "OR"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "int n = 5;\n\nif (n == 0 || n > 100)\n{\n    Console.WriteLine(\"YES\");\n}\nelse\n{\n    Console.WriteLine(\"NO\");\n}",
+        "pseudocode": "n ← 5\nif ((n ＝ 0) or (n ＞ 100))\n  \"YES\" を出力\nelse\n  \"NO\" を出力\nendif",
+        "choices": [
+            "何も出力されない",
+            "NO",
+            "実行時エラー",
+            "YES"
+        ],
+        "answer": 1,
+        "jp": "|| はどちらか一方が成り立てば真。n は 0 でもなく 100 より大きくもないので else 側の NO。",
+        "jpResult": "NO"
     },
     {
         "id": "loop-001",
@@ -435,14 +563,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "for (int i = 0; i < 3; i++)\n{\n    Console.WriteLine(i);\n}",
-        "pseudocode": "for (i ← 0 to 2)\n  i を出力\nendfor",
+        "pseudocode": "for (i を 0 から 2 まで 1 ずつ増やしながら)\n  i を出力\nendfor",
         "choices": [
-            "0,1,2",
+            "コンパイルエラー",
             "1,2,3",
-            "0,1,2,3",
-            "コンパイルエラー"
+            "0,1,2",
+            "0,1,2,3"
         ],
-        "answer": 0,
+        "answer": 2,
         "jp": "for は「初期化→条件判定→処理→更新」を繰り返す。条件を満たさなくなった時点で終了する。",
         "jpResult": "0,1,2"
     },
@@ -457,14 +585,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "for (int i = 1; i <= 3; i++)\n{\n    Console.WriteLine(i);\n}",
-        "pseudocode": "for (i ← 1 to 3)\n  i を出力\nendfor",
+        "pseudocode": "for (i を 1 から 3 まで 1 ずつ増やしながら)\n  i を出力\nendfor",
         "choices": [
-            "1,2,3",
             "0,1,2",
             "1,2,3,4",
-            "何も出力されない"
+            "何も出力されない",
+            "1,2,3"
         ],
-        "answer": 0,
+        "answer": 3,
         "jp": "条件式の「<=」は境界（同じ値）も含めて繰り返す。",
         "jpResult": "1,2,3"
     },
@@ -479,12 +607,12 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "for (int i = 3; i > 0; i--)\n{\n    Console.WriteLine(i);\n}",
-        "pseudocode": "for (i ← 3 downto 1)\n  i を出力\nendfor",
+        "pseudocode": "for (i を 3 から 1 まで 1 ずつ減らしながら)\n  i を出力\nendfor",
         "choices": [
             "3,2,1",
-            "3,2,1,0",
             "2,1,0",
-            "1,2,3"
+            "1,2,3",
+            "3,2,1,0"
         ],
         "answer": 0,
         "jp": "for は増加だけでなく減少方向にも書ける。終了条件に達したら止まる。",
@@ -500,14 +628,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "int x = 1;\nwhile (x < 5)\n{\n    Console.WriteLine(x);\n    x++;\n}",
-        "pseudocode": "x ← 1\nwhile (x ＜ 5)\n  x を出力\n  x ← x + 1\nendwhile",
+        "pseudocode": "x ← 1\nwhile (x ＜ 5)\n  x を出力\n  x ← x ＋ 1\nendwhile",
         "choices": [
+            "何も出力されない",
             "1,2,3,4",
             "1,2,3,4,5",
-            "0,1,2,3,4",
-            "何も出力されない"
+            "0,1,2,3,4"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "while は条件を満たす間だけ繰り返す。ループ内で変数を更新しないと終わらない。",
         "jpResult": "1,2,3,4"
     },
@@ -521,14 +649,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "int x = 0;\ndo\n{\n    Console.WriteLine(\"Hi\");\n    x++;\n} while (x < 0);",
-        "pseudocode": "x ← 0\ndo\n  \"Hi\" を出力\n  x ← x + 1\nwhile (x ＜ 0)",
+        "pseudocode": "x ← 0\ndo\n  \"Hi\" を出力\n  x ← x ＋ 1\nwhile (x ＜ 0)",
         "choices": [
-            "Hi",
             "何も出力されない",
             "Hi,Hi",
+            "Hi",
             "コンパイルエラー"
         ],
-        "answer": 0,
+        "answer": 2,
         "jp": "do-while は「条件判定が後」なので、条件が最初から成り立たなくても1回は実行される。",
         "jpResult": "Hi"
     },
@@ -542,14 +670,14 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "for (int i = 0; i < 5; i++)\n{\n    if (i == 2)\n    {\n        break;\n    }\n    Console.WriteLine(i);\n}",
-        "pseudocode": "for (i ← 0 to 4)\n  if (i ＝ 2)\n    ループを終了\n  endif\n  i を出力\nendfor",
+        "pseudocode": "for (i を 0 から 4 まで 1 ずつ増やしながら)\n  if (i ＝ 2)\n    繰返し処理を終了する  // C#の break\n  endif\n  i を出力\nendfor",
         "choices": [
-            "0,1",
-            "0,1,2",
             "0,1,3,4",
-            "1,2"
+            "1,2",
+            "0,1,2",
+            "0,1"
         ],
-        "answer": 0,
+        "answer": 3,
         "jp": "break は最も内側の繰り返しを途中で終了する。",
         "jpResult": "0,1"
     },
@@ -563,12 +691,12 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "for (int i = 0; i < 5; i++)\n{\n    if (i == 2)\n    {\n        continue;\n    }\n    Console.WriteLine(i);\n}",
-        "pseudocode": "for (i ← 0 to 4)\n  if (i ＝ 2)\n    次の繰り返しへ\n  endif\n  i を出力\nendfor",
+        "pseudocode": "for (i を 0 から 4 まで 1 ずつ増やしながら)\n  if (i ＝ 2)\n    次の繰返しに進む  // C#の continue\n  endif\n  i を出力\nendfor",
         "choices": [
             "0,1,3,4",
+            "2",
             "0,1,2,3,4",
-            "0,1",
-            "2"
+            "0,1"
         ],
         "answer": 0,
         "jp": "continue はその回の残り処理を飛ばして、次の繰り返しに進む。",
@@ -584,14 +712,14 @@
         "difficulty": 2,
         "question": "次のコードで最終的な count の値はどれ？",
         "code": "int count = 0;\nfor (int i = 0; i < 2; i++)\n{\n    for (int j = 0; j < 3; j++)\n    {\n        count++;\n    }\n}\nConsole.WriteLine(count);",
-        "pseudocode": "count ← 0\nfor (i ← 0 to 1)\n  for (j ← 0 to 2)\n    count ← count + 1\n  endfor\nendfor\ncount を出力",
+        "pseudocode": "count ← 0\nfor (i を 0 から 1 まで 1 ずつ増やしながら)\n  for (j を 0 から 2 まで 1 ずつ増やしながら)\n    count ← count ＋ 1\n  endfor\nendfor\ncount を出力",
         "choices": [
-            "6",
             "5",
+            "6",
             "3",
             "2"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "ネストしたループでは、外側1回ごとに内側が全回数ぶん実行される。",
         "jpResult": "6"
     },
@@ -605,14 +733,14 @@
         "difficulty": 2,
         "question": "次のコードで出力される sum はどれ？",
         "code": "int sum = 0;\nfor (int i = 1; i <= 5; i++)\n{\n    sum += i;\n}\nConsole.WriteLine(sum);",
-        "pseudocode": "sum ← 0\nfor (i ← 1 to 5)\n  sum ← sum + i\nendfor\nsum を出力",
+        "pseudocode": "sum ← 0\nfor (i を 1 から 5 まで 1 ずつ増やしながら)\n  sum ← sum ＋ i\nendfor\nsum を出力",
         "choices": [
-            "15",
-            "10",
             "5",
-            "コンパイルエラー"
+            "コンパイルエラー",
+            "15",
+            "10"
         ],
-        "answer": 0,
+        "answer": 2,
         "jp": "累積（sum += i）は、各回の値を加算し続ける。",
         "jpResult": "15"
     },
@@ -626,14 +754,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "for (int i = 0; i < 5; i++)\n{\n    Console.Write(i);\n}",
-        "pseudocode": "for (i ← 0 to 4)\n  i を出力\nendfor",
+        "pseudocode": "for (i を 0 から 4 まで 1 ずつ増やしながら)\n  i を出力\nendfor",
         "choices": [
-            "01234",
+            "何も出力されない",
             "012345",
             "1234",
-            "何も出力されない"
+            "01234"
         ],
-        "answer": 0,
+        "answer": 3,
         "jp": "条件が i < 5 のとき、i は 5 になる前まで繰り返す。",
         "jpResult": "01234"
     },
@@ -647,7 +775,7 @@
         "difficulty": 2,
         "question": "次のコードで出力される sum はどれ？",
         "code": "int sum = 0;\nint[] a = { 1, 2, 3 };\nforeach (int x in a)\n{\n    sum += x;\n}\nConsole.WriteLine(sum);",
-        "pseudocode": "sum ← 0\na ← [1,2,3]\nfor each (x in a)\n  sum ← sum + x\nendfor\nsum を出力",
+        "pseudocode": "sum ← 0\n整数型の配列: a ← {1, 2, 3}\nfor (i を 1 から aの要素数 まで 1 ずつ増やしながら)\n  sum ← sum ＋ a[i]\nendfor\nsum を出力",
         "choices": [
             "6",
             "3",
@@ -669,14 +797,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "for (int i = 0; i <= 6; i += 2)\n{\n    Console.WriteLine(i);\n}",
-        "pseudocode": "for (i ← 0 to 6 step 2)\n  i を出力\nendfor",
+        "pseudocode": "for (i を 0 から 6 まで 2 ずつ増やしながら)\n  i を出力\nendfor",
         "choices": [
-            "0,2,4,6",
-            "0,2,4",
             "2,4,6",
-            "0,1,2,3,4,5,6"
+            "0,2,4,6",
+            "0,1,2,3,4,5,6",
+            "0,2,4"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "更新式（i += 2）により、2ずつ増加する。",
         "jpResult": "0,2,4,6"
     },
@@ -693,12 +821,12 @@
         "code": "int x = 1;\nwhile (x < 10)\n{\n    x *= 2;\n}\nConsole.WriteLine(x);",
         "pseudocode": "x ← 1\nwhile (x ＜ 10)\n  x ← x × 2\nendwhile\nx を出力",
         "choices": [
-            "16",
+            "コンパイルエラー",
             "8",
-            "10",
-            "コンパイルエラー"
+            "16",
+            "10"
         ],
-        "answer": 0,
+        "answer": 2,
         "jp": "ループ内で x を更新し、条件を満たさなくなった時点の x が残る。",
         "jpResult": "16"
     },
@@ -713,14 +841,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "for (int i = 0; i < 3; i++)\n{\n    Console.Write(\"X\");\n}",
-        "pseudocode": "for (i ← 0 to 2)\n  \"X\" を出力\nendfor",
+        "pseudocode": "for (i を 0 から 2 まで 1 ずつ増やしながら)\n  \"X\" を出力\nendfor",
         "choices": [
-            "XXX",
             "XX",
             "XXXX",
-            "何も出力されない"
+            "何も出力されない",
+            "XXX"
         ],
-        "answer": 0,
+        "answer": 3,
         "jp": "同じ文字列を繰り返し出力すると、回数ぶん連結される。",
         "jpResult": "XXX"
     },
@@ -735,12 +863,12 @@
         "difficulty": 3,
         "question": "次のコードで出力される count はどれ？",
         "code": "int count = 0;\nfor (int i = 0; i < 3; i++)\n{\n    for (int j = 0; j < 3; j++)\n    {\n        if (j == 1)\n        {\n            break;\n        }\n        count++;\n    }\n}\nConsole.WriteLine(count);",
-        "pseudocode": "count ← 0\nfor (i ← 0 to 2)\n  for (j ← 0 to 2)\n    if (j ＝ 1)\n      内側ループ終了\n    endif\n    count ← count + 1\n  endfor\nendfor\ncount を出力",
+        "pseudocode": "count ← 0\nfor (i を 0 から 2 まで 1 ずつ増やしながら)\n  for (j を 0 から 2 まで 1 ずつ増やしながら)\n    if (j ＝ 1)\n      内側の繰返しを終了する  // C#の break（内側のみ）\n    endif\n    count ← count ＋ 1\n  endfor\nendfor\ncount を出力",
         "choices": [
             "3",
-            "6",
             "9",
-            "2"
+            "2",
+            "6"
         ],
         "answer": 0,
         "jp": "break は内側のループだけを終了する。外側のループは続く。",
@@ -757,14 +885,14 @@
         "difficulty": 3,
         "question": "次のコードで出力される sum はどれ？",
         "code": "int sum = 0;\nfor (int i = 1; i <= 5; i++)\n{\n    if (i % 2 == 0)\n    {\n        continue;\n    }\n    sum += i;\n}\nConsole.WriteLine(sum);",
-        "pseudocode": "sum ← 0\nfor (i ← 1 to 5)\n  if (i mod 2 ＝ 0)\n    次の繰り返しへ\n  endif\n  sum ← sum + i\nendfor\nsum を出力",
+        "pseudocode": "sum ← 0\nfor (i を 1 から 5 まで 1 ずつ増やしながら)\n  if (i mod 2 ＝ 0)\n    次の繰返しに進む  // C#の continue\n  endif\n  sum ← sum ＋ i\nendfor\nsum を出力",
         "choices": [
+            "コンパイルエラー",
             "9",
             "15",
-            "6",
-            "コンパイルエラー"
+            "6"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "continue により一部の回だけ加算処理を飛ばせる。",
         "jpResult": "9"
     },
@@ -779,14 +907,14 @@
         "difficulty": 3,
         "question": "次のコードはコンパイルできる？",
         "code": "for (int i = 0; i < 1; i++)\n{\n    Console.WriteLine(i);\n}\nConsole.WriteLine(i);",
-        "pseudocode": "for (i ← 0 to 0)\n  i を出力\nendfor\ni を出力（※iの参照）",
+        "pseudocode": "for (i を 0 から 0 まで 1 ずつ増やしながら)\n  i を出力\nendfor\ni を出力  // C#では for で宣言した i はループ外で使えない",
         "choices": [
             "コンパイルできる",
-            "コンパイルエラー",
             "実行時エラー",
+            "コンパイルエラー",
             "何も出力されない"
         ],
-        "answer": 1,
+        "answer": 2,
         "jp": "for の初期化で宣言した変数は、その for 文のスコープ内だけで有効。",
         "jpResult": "コンパイルエラー"
     },
@@ -801,14 +929,14 @@
         "difficulty": 2,
         "question": "次のコードで出力される n はどれ？",
         "code": "int n = 3;\nwhile (n > 0)\n{\n    n--;\n}\nConsole.WriteLine(n);",
-        "pseudocode": "n ← 3\nwhile (n ＞ 0)\n  n ← n - 1\nendwhile\nn を出力",
+        "pseudocode": "n ← 3\nwhile (n ＞ 0)\n  n ← n － 1\nendwhile\nn を出力",
         "choices": [
-            "0",
-            "1",
             "-1",
-            "3"
+            "3",
+            "1",
+            "0"
         ],
-        "answer": 0,
+        "answer": 3,
         "jp": "条件を満たす間だけ減少させ続けると、境界で止まる。",
         "jpResult": "0"
     },
@@ -823,12 +951,12 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "int x = 0;\nfor (; x < 3; )\n{\n    Console.WriteLine(x);\n    x++;\n}",
-        "pseudocode": "for (x ← 0 to 2)\n  x を出力\nendfor",
+        "pseudocode": "x ← 0\nwhile (x ＜ 3)\n  x を出力\n  x ← x ＋ 1\nendwhile  // C#は for (; x ＜ 3; ) で初期化・更新を省略",
         "choices": [
             "0,1,2",
+            "何も出力されない",
             "1,2,3",
-            "0,1,2,3",
-            "何も出力されない"
+            "0,1,2,3"
         ],
         "answer": 0,
         "jp": "for は初期化・更新式を省略しても書ける。更新しないと無限ループになるので注意。",
@@ -844,14 +972,14 @@
         "difficulty": 3,
         "question": "次のコードの動作として正しいものはどれ？",
         "code": "for (int i = 0; i < 3; )\n{\n    Console.WriteLine(i);\n}",
-        "pseudocode": "i ← 0\nwhile (i ＜ 3)\n  i を出力\n  （更新が無い）\nendwhile",
+        "pseudocode": "i ← 0\nwhile (i ＜ 3)\n  i を出力\n  // 更新がない\nendwhile",
         "choices": [
-            "0が無限に出力される",
             "0,1,2が出力される",
+            "0が無限に出力される",
             "何も出力されない",
             "コンパイルエラー"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "更新処理が無い場合、条件がずっと成り立つとループが終わらない。",
         "jpResult": "0が無限に出力される"
     },
@@ -866,14 +994,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = { 10, 20, 30 };\nConsole.WriteLine(a[0]);",
-        "pseudocode": "a ← [10, 20, 30]\na[0] を出力",
+        "pseudocode": "整数型の配列: a ← {10, 20, 30}\na[1] を出力  // C#の a[0] に相当（擬似言語は1始まり）",
         "choices": [
-            "10",
-            "20",
             "30",
-            "コンパイルエラー"
+            "コンパイルエラー",
+            "10",
+            "20"
         ],
-        "answer": 0,
+        "answer": 2,
         "jp": "配列のインデックスは0から始まる。a[0] は先頭の要素を参照する。",
         "jpResult": "10"
     },
@@ -887,14 +1015,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "int[] arr = { 5, 10, 15 };\nConsole.WriteLine(arr[2]);",
-        "pseudocode": "arr ← [5, 10, 15]\narr[2] を出力",
+        "pseudocode": "整数型の配列: arr ← {5, 10, 15}\narr[3] を出力  // C#の arr[2] に相当（擬似言語は1始まり）",
         "choices": [
+            "コンパイルエラー",
             "5",
             "10",
-            "15",
-            "コンパイルエラー"
+            "15"
         ],
-        "answer": 2,
+        "answer": 3,
         "jp": "arr[2] は3番目の要素（0始まりでインデックス2）を参照する。",
         "jpResult": "15"
     },
@@ -908,7 +1036,7 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = { 1, 2, 3 };\nConsole.WriteLine(a.Length);",
-        "pseudocode": "a ← [1, 2, 3]\na.Length を出力",
+        "pseudocode": "整数型の配列: a ← {1, 2, 3}\naの要素数 を出力  // C#の a.Length",
         "choices": [
             "3",
             "2",
@@ -929,12 +1057,12 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = { 1, 2, 3 };\na[1] = 99;\nConsole.WriteLine(a[1]);",
-        "pseudocode": "a ← [1, 2, 3]\na[1] ← 99\na[1] を出力",
+        "pseudocode": "整数型の配列: a ← {1, 2, 3}\na[2] ← 99  // C#の a[1] に相当\na[2] を出力",
         "choices": [
-            "2",
-            "99",
             "1",
-            "コンパイルエラー"
+            "99",
+            "コンパイルエラー",
+            "2"
         ],
         "answer": 1,
         "jp": "配列の要素には代入で値を書き換えられる。",
@@ -951,14 +1079,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = { 2, 4, 6 };\nint sum = 0;\nfor (int i = 0; i < a.Length; i++)\n{\n    sum += a[i];\n}\nConsole.WriteLine(sum);",
-        "pseudocode": "a ← [2, 4, 6]\nsum ← 0\nfor (i ← 0 to a.Length-1)\n  sum ← sum + a[i]\nendfor\nsum を出力",
+        "pseudocode": "整数型の配列: a ← {2, 4, 6}\nsum ← 0\nfor (i を 1 から aの要素数 まで 1 ずつ増やしながら)\n  sum ← sum ＋ a[i]\nendfor\nsum を出力",
         "choices": [
-            "12",
+            "コンパイルエラー",
             "6",
-            "4",
-            "コンパイルエラー"
+            "12",
+            "4"
         ],
-        "answer": 0,
+        "answer": 2,
         "jp": "for ループで配列の全要素を順に参照して合計できる。",
         "jpResult": "12"
     },
@@ -973,14 +1101,14 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = new int[4];\nConsole.WriteLine(a.Length);",
-        "pseudocode": "a ← 要素4個の配列（初期値0）\na.Length を出力",
+        "pseudocode": "整数型の配列: a ← {0, 0, 0, 0}  // 要素数4、初期値0\naの要素数 を出力  // C#の a.Length",
         "choices": [
-            "4",
             "0",
             "null",
-            "コンパイルエラー"
+            "コンパイルエラー",
+            "4"
         ],
-        "answer": 0,
+        "answer": 3,
         "jp": "new int[4] は要素数4の配列を作成し、各要素は0で初期化される。",
         "jpResult": "4"
     },
@@ -994,12 +1122,12 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = new int[3];\nConsole.WriteLine(a[0]);",
-        "pseudocode": "a ← [0, 0, 0]\na[0] を出力",
+        "pseudocode": "整数型の配列: a ← {0, 0, 0}\na[1] を出力  // C#の a[0] に相当",
         "choices": [
             "0",
-            "null",
             "未定義",
-            "コンパイルエラー"
+            "コンパイルエラー",
+            "null"
         ],
         "answer": 0,
         "jp": "int 型の配列は数値型なので、未代入の要素は0で初期化される。",
@@ -1015,14 +1143,14 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = { 1, 2, 3 };\nforeach (int x in a)\n{\n    Console.Write(x);\n}",
-        "pseudocode": "a ← [1, 2, 3]\nfor each (x in a)\n  x を出力\nendfor",
+        "pseudocode": "整数型の配列: a ← {1, 2, 3}\nfor (i を 1 から aの要素数 まで 1 ずつ増やしながら)\n  a[i] を出力\nendfor",
         "choices": [
+            "コンパイルエラー",
             "123",
             "321",
-            "1,2,3",
-            "コンパイルエラー"
+            "1,2,3"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "foreach は配列の要素を先頭から順に取り出して処理する。",
         "jpResult": "123"
     },
@@ -1036,7 +1164,7 @@
         "difficulty": 2,
         "question": "次のコードの結果はどれ？",
         "code": "int[] a = { 10, 20 };\nConsole.WriteLine(a[2]);",
-        "pseudocode": "a ← [10, 20]\na[2] を参照",
+        "pseudocode": "整数型の配列: a ← {10, 20}\na[3] を参照  // C#の a[2] に相当。どちらも範囲外",
         "choices": [
             "0",
             "30",
@@ -1058,14 +1186,14 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = { 1, 2, 3 };\nint[] b = a;\nb[0] = 99;\nConsole.WriteLine(a[0]);",
-        "pseudocode": "a ← [1, 2, 3]\nb ← a（参照のコピー）\nb[0] ← 99\na[0] を出力",
+        "pseudocode": "整数型の配列: a ← {1, 2, 3}\nb ← a  // 参照のコピー\nb[1] ← 99  // C#の b[0] に相当\na[1] を出力",
         "choices": [
-            "99",
-            "1",
             "3",
-            "コンパイルエラー"
+            "コンパイルエラー",
+            "1",
+            "99"
         ],
-        "answer": 0,
+        "answer": 3,
         "jp": "配列は参照型。b = a は同じ配列を指すので、b[0]の変更はa[0]にも反映される。",
         "jpResult": "99"
     },
@@ -1079,12 +1207,12 @@
         "difficulty": 3,
         "question": "次のコードの出力はどれ？",
         "code": "int[,] m = { { 1, 2 }, { 3, 4 } };\nConsole.WriteLine(m[0, 1]);",
-        "pseudocode": "m ← 2×2の2次元配列\nm[0,1] を出力",
+        "pseudocode": "整数型の二次元配列: m ← {{1, 2}, {3, 4}}\nm[1, 2] を出力  // C#の m[0, 1] に相当（擬似言語は1始まり）",
         "choices": [
             "2",
+            "コンパイルエラー",
             "1",
-            "3",
-            "コンパイルエラー"
+            "3"
         ],
         "answer": 0,
         "jp": "2次元配列 m[行,列] で、m[0,1] は1行目2列目の要素。",
@@ -1100,14 +1228,14 @@
         "difficulty": 3,
         "question": "次のコードの出力はどれ？",
         "code": "int[][] j = { new int[] { 1 }, new int[] { 2, 3 } };\nConsole.WriteLine(j[1][0]);",
-        "pseudocode": "j ← [[1], [2,3]]\nj[1][0] を出力",
+        "pseudocode": "j ← {{1}, {2, 3}}  // ジャグ配列（配列の配列）。標準の二次元は m[行, 列]\nj[2][1] を出力  // C#の j[1][0] に相当",
         "choices": [
-            "2",
             "1",
+            "2",
             "3",
             "コンパイルエラー"
         ],
-        "answer": 0,
+        "answer": 1,
         "jp": "ジャグ配列は「配列の配列」。j[1] は2番目の内側配列で、その先頭要素が j[1][0]。",
         "jpResult": "2"
     },
@@ -1121,14 +1249,14 @@
         "difficulty": 3,
         "question": "次のコードの結果はどれ？",
         "code": "int[] a = null;\nConsole.WriteLine(a.Length);",
-        "pseudocode": "a ← null\na.Length を参照",
+        "pseudocode": "a ← 未定義\naの要素数 を参照  // C#の null に対する Length 参照は例外",
         "choices": [
-            "0",
-            "NullReferenceException",
             "コンパイルエラー",
-            "何も出力されない"
+            "何も出力されない",
+            "NullReferenceException",
+            "0"
         ],
-        "answer": 1,
+        "answer": 2,
         "jp": "null の配列に対して Length を参照すると NullReferenceException が発生する。",
         "jpResult": "NullReferenceException"
     },
@@ -1143,14 +1271,14 @@
         "difficulty": 1,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = { 5, 10, 15 };\nfor (int i = 0; i < a.Length; i++)\n{\n    Console.Write(a[i]);\n}",
-        "pseudocode": "a ← [5, 10, 15]\nfor (i ← 0 to 2)\n  a[i] を出力\nendfor",
+        "pseudocode": "整数型の配列: a ← {5, 10, 15}\nfor (i を 1 から aの要素数 まで 1 ずつ増やしながら)\n  a[i] を出力\nendfor",
         "choices": [
-            "51015",
+            "コンパイルエラー",
             "51510",
             "0,1,2",
-            "コンパイルエラー"
+            "51015"
         ],
-        "answer": 0,
+        "answer": 3,
         "jp": "Write は改行せずに出力する。i は 0,1,2 と進み、それぞれ a[0],a[1],a[2] を出力する。",
         "jpResult": "51015"
     },
@@ -1164,7 +1292,7 @@
         "difficulty": 2,
         "question": "次のコードの出力はどれ？",
         "code": "int[] a = { 1, 2, 3 };\nfor (int i = a.Length - 1; i >= 0; i--)\n{\n    Console.Write(a[i]);\n}",
-        "pseudocode": "a ← [1, 2, 3]\nfor (i ← 2 downto 0)\n  a[i] を出力\nendfor",
+        "pseudocode": "整数型の配列: a ← {1, 2, 3}\nfor (i を aの要素数 から 1 まで 1 ずつ減らしながら)\n  a[i] を出力\nendfor",
         "choices": [
             "321",
             "123",
@@ -1175,19 +1303,332 @@
         "jp": "インデックスを後ろから減らしていくと、配列を逆順に参照できる。",
         "jpResult": "321"
     },
-    {"id":"sub-001","lang":"csharp","genre":"subprograms","topics":["戻り値","基本"],"difficulty":1,"question":"次のコードの出力はどれ？","code":"static int Add(int a, int b) { return a + b; }\nint x = Add(2, 3);\nConsole.WriteLine(x);","pseudocode":"Add(a, b)  ← 関数を宣言\n  return a + b\n\nx ← Add(2, 3)\nx を出力","choices":["5","3","2","コンパイルエラー"],"answer":0,"jp":"副プログラム（メソッド）は return で値を返す。Add(2,3) は 5 を返す。","jpResult":"5"},
-    {"id":"sub-002","lang":"csharp","genre":"subprograms","topics":["void","呼び出し"],"difficulty":1,"question":"次のコードの出力はどれ？","code":"static void Say() { Console.WriteLine(\"Hi\"); }\nSay();","pseudocode":"Say()  ← 手続を宣言\n  \"Hi\" を出力\n\nSay()  ← 手続を呼び出し","choices":["Hi","何も出力されない","コンパイルエラー","実行時エラー"],"answer":0,"jp":"void は戻り値がないメソッド。呼び出すと処理が実行される。","jpResult":"Hi"},
-    {"id":"sub-003","lang":"csharp","genre":"subprograms","topics":["引数","値渡し"],"difficulty":1,"question":"次のコードの出力はどれ？","code":"static void Inc(int n) { n++; }\nint x = 5;\nInc(x);\nConsole.WriteLine(x);","pseudocode":"Inc(n)  ← 手続を宣言\n  n ← n + 1\n\nx ← 5\nInc(x)  ← 手続を呼び出し\nx を出力","choices":["5","6","0","コンパイルエラー"],"answer":0,"jp":"C# のデフォルトは値渡し。Inc 内で n を変更しても呼び出し元の x は変わらない。","jpResult":"5"},
-    {"id":"sub-004","lang":"csharp","genre":"subprograms","topics":["戻り値","式"],"difficulty":1,"question":"次のコードの出力はどれ？","code":"static int Double(int n) { return n * 2; }\nConsole.WriteLine(Double(4));","pseudocode":"Double(n)  ← 関数を宣言\n  return n × 2\n\nDouble(4) を出力","choices":["8","4","2","コンパイルエラー"],"answer":0,"jp":"Double(4) は 4×2=8 を返す。","jpResult":"8"},
-    {"id":"sub-005","lang":"csharp","genre":"subprograms","topics":["複数呼び出し"],"difficulty":1,"question":"次のコードの出力はどれ？","code":"static void Print(int n) { Console.Write(n); }\nPrint(1);\nPrint(2);\nPrint(3);","pseudocode":"Print(n)  ← 手続を宣言\n  n を出力\n\nPrint(1)\nPrint(2)\nPrint(3)","choices":["123","321","1 2 3","何も出力されない"],"answer":0,"jp":"副プログラムは何度でも呼び出せる。順に 1,2,3 が出力される。","jpResult":"123"},
-    {"id":"sub-006","lang":"csharp","genre":"subprograms","topics":["戻り値","条件"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"static int Max(int a, int b) { return a > b ? a : b; }\nint x = Max(10, 20);\nConsole.WriteLine(x);","pseudocode":"Max(a, b)  ← 関数を宣言\n  if (a ＞ b)\n    return a\n  else\n    return b\n  endif\n\nx ← Max(10, 20)\nx を出力","choices":["20","10","30","コンパイルエラー"],"answer":0,"jp":"三項演算子 ? : で大きい方を返す。Max(10,20) は 20。","jpResult":"20"},
-    {"id":"sub-007","lang":"csharp","genre":"subprograms","topics":["戻り値","ネスト"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"static int Add(int a, int b) { return a + b; }\nint x = Add(Add(1, 2), Add(3, 4));\nConsole.WriteLine(x);","pseudocode":"Add(a, b)  ← 関数を宣言\n  return a + b\n\nx ← Add(Add(1,2), Add(3,4))\nx を出力","choices":["10","7","6","コンパイルエラー"],"answer":0,"jp":"Add(1,2)=3、Add(3,4)=7。Add(3,7)=10。","jpResult":"10"},
-    {"id":"sub-008","lang":"csharp","genre":"subprograms","topics":["戻り値","0"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"static int GetZero() { return 0; }\nint x = GetZero();\nConsole.WriteLine(x);","pseudocode":"GetZero()  ← 関数を宣言\n  return 0\n\nx ← GetZero()\nx を出力","choices":["0","null","未定義","コンパイルエラー"],"answer":0,"jp":"int 型の副プログラムは 0 を返すこともできる。","jpResult":"0"},
-    {"id":"sub-009","lang":"csharp","genre":"subprograms","topics":["引数","複数"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"static int Mul(int a, int b) { return a * b; }\nConsole.WriteLine(Mul(3, 4));","pseudocode":"Mul(a, b)  ← 関数を宣言\n  return a × b\n\nMul(3, 4) を出力","choices":["12","7","4","コンパイルエラー"],"answer":0,"jp":"複数の引数を受け取る副プログラム。Mul(3,4)=12。","jpResult":"12"},
-    {"id":"sub-010","lang":"csharp","genre":"subprograms","topics":["戻り値","早期 return"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"static int Check(int n) { if (n <= 0) return 0; return n; }\nConsole.WriteLine(Check(5));","pseudocode":"Check(n)  ← 関数を宣言\n  if (n ≦ 0)\n    return 0\n  endif\n  return n\n\nCheck(5) を出力","choices":["5","0","1","コンパイルエラー"],"answer":0,"jp":"条件を満たさないので早期 return は実行されず、return n で 5 が返る。","jpResult":"5"},
-    {"id":"sub-011","lang":"csharp","genre":"subprograms","topics":["戻り値","早期 return"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"static int Check(int n) { if (n <= 0) return 0; return n; }\nConsole.WriteLine(Check(0));","pseudocode":"Check(n)  ← 関数を宣言\n  if (n ≦ 0)\n    return 0\n  endif\n  return n\n\nCheck(0) を出力","choices":["0","1","-1","コンパイルエラー"],"answer":0,"jp":"n<=0 が真なので早期 return 0 が実行される。","jpResult":"0"},
-    {"id":"sub-012","lang":"csharp","genre":"subprograms","topics":["戻り値","void"],"difficulty":3,"question":"次のコードの結果はどれ？","code":"static void Say() { Console.WriteLine(\"Hi\"); }\nint x = Say();","pseudocode":"Say()  ← 手続を宣言\n  \"Hi\" を出力\n\nx ← Say()  ← void は返り値がない","choices":["Hi","コンパイルエラー","実行時エラー","0"],"answer":1,"jp":"void は戻り値がない。void の戻り値を変数に代入しようとするとコンパイルエラー。","jpResult":"コンパイルエラー"},
-    {"id":"sub-013","lang":"csharp","genre":"subprograms","topics":["再帰"],"difficulty":3,"question":"次のコードの出力はどれ？","code":"static int F(int n) { if (n <= 1) return 1; return n * F(n - 1); }\nConsole.WriteLine(F(4));","pseudocode":"F(n)  ← 関数を宣言\n  if (n ≦ 1)\n    return 1\n  endif\n  return n × F(n-1)\n\nF(4) を出力","choices":["24","4","12","スタックオーバーフロー"],"answer":0,"jp":"再帰で階乗。F(4)=4×F(3)=4×3×F(2)=4×3×2×F(1)=4×3×2×1=24。","jpResult":"24"},
-    {"id":"sub-014","lang":"csharp","genre":"subprograms","topics":["戻り値","配列"],"difficulty":3,"question":"次のコードの出力はどれ？","code":"static int[] Get() { return new int[] { 1, 2, 3 }; }\nint[] a = Get();\nConsole.WriteLine(a[1]);","pseudocode":"Get()  ← 関数を宣言\n  return [1, 2, 3]\n\na ← Get()\na[1] を出力","choices":["2","1","3","コンパイルエラー"],"answer":0,"jp":"副プログラムは配列も返せる。a[1] は2番目の要素で 2。","jpResult":"2"},
-    {"id":"sub-015","lang":"csharp","genre":"subprograms","topics":["戻り値","文字列"],"difficulty":2,"question":"次のコードの出力はどれ？","code":"static string Greet() { return \"Hello\"; }\nstring s = Greet();\nConsole.WriteLine(s);","pseudocode":"Greet()  ← 関数を宣言\n  return \"Hello\"\n\ns ← Greet()\ns を出力","choices":["Hello","空","null","コンパイルエラー"],"answer":0,"jp":"string 型の副プログラムは文字列を返せる。","jpResult":"Hello"}
+    {
+        "id": "sub-001",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "基本"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int Add(int a, int b) { return a + b; }\nint x = Add(2, 3);\nConsole.WriteLine(x);",
+        "pseudocode": "○Add(整数型: a, 整数型: b)\n  return a ＋ b\n\nx ← Add(2, 3)\nx を出力",
+        "choices": [
+            "2",
+            "5",
+            "コンパイルエラー",
+            "3"
+        ],
+        "answer": 1,
+        "jp": "副プログラム（メソッド）は return で値を返す。Add(2,3) は 5 を返す。",
+        "jpResult": "5"
+    },
+    {
+        "id": "sub-002",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "void",
+            "呼び出し"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "static void Say() { Console.WriteLine(\"Hi\"); }\nSay();",
+        "pseudocode": "○Say()\n  \"Hi\" を出力\n\nSay()",
+        "choices": [
+            "実行時エラー",
+            "何も出力されない",
+            "Hi",
+            "コンパイルエラー"
+        ],
+        "answer": 2,
+        "jp": "void は戻り値がないメソッド。呼び出すと処理が実行される。",
+        "jpResult": "Hi"
+    },
+    {
+        "id": "sub-003",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "引数",
+            "値渡し"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "static void Inc(int n) { n++; }\nint x = 5;\nInc(x);\nConsole.WriteLine(x);",
+        "pseudocode": "○Inc(整数型: n)\n  n ← n ＋ 1\n\nx ← 5\nInc(x)\nx を出力",
+        "choices": [
+            "6",
+            "0",
+            "コンパイルエラー",
+            "5"
+        ],
+        "answer": 3,
+        "jp": "C# のデフォルトは値渡し。Inc 内で n を変更しても呼び出し元の x は変わらない。",
+        "jpResult": "5"
+    },
+    {
+        "id": "sub-004",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "式"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int Double(int n) { return n * 2; }\nConsole.WriteLine(Double(4));",
+        "pseudocode": "○Double(整数型: n)\n  return n × 2\n\nDouble(4) を出力",
+        "choices": [
+            "8",
+            "2",
+            "コンパイルエラー",
+            "4"
+        ],
+        "answer": 0,
+        "jp": "Double(4) は 4×2=8 を返す。",
+        "jpResult": "8"
+    },
+    {
+        "id": "sub-005",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "複数呼び出し"
+        ],
+        "difficulty": 1,
+        "question": "次のコードの出力はどれ？",
+        "code": "static void Print(int n) { Console.Write(n); }\nPrint(1);\nPrint(2);\nPrint(3);",
+        "pseudocode": "○Print(整数型: n)\n  n を出力\n\nPrint(1)\nPrint(2)\nPrint(3)",
+        "choices": [
+            "何も出力されない",
+            "123",
+            "321",
+            "1 2 3"
+        ],
+        "answer": 1,
+        "jp": "副プログラムは何度でも呼び出せる。順に 1,2,3 が出力される。",
+        "jpResult": "123"
+    },
+    {
+        "id": "sub-006",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "条件"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int Max(int a, int b) { return a > b ? a : b; }\nint x = Max(10, 20);\nConsole.WriteLine(x);",
+        "pseudocode": "○Max(整数型: a, 整数型: b)\n  if (a ＞ b)\n    return a\n  else\n    return b\n  endif\n\nx ← Max(10, 20)\nx を出力",
+        "choices": [
+            "10",
+            "30",
+            "20",
+            "コンパイルエラー"
+        ],
+        "answer": 2,
+        "jp": "三項演算子 ? : で大きい方を返す。Max(10,20) は 20。",
+        "jpResult": "20"
+    },
+    {
+        "id": "sub-007",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "ネスト"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int Add(int a, int b) { return a + b; }\nint x = Add(Add(1, 2), Add(3, 4));\nConsole.WriteLine(x);",
+        "pseudocode": "○Add(整数型: a, 整数型: b)\n  return a ＋ b\n\nx ← Add(Add(1, 2), Add(3, 4))\nx を出力",
+        "choices": [
+            "6",
+            "コンパイルエラー",
+            "7",
+            "10"
+        ],
+        "answer": 3,
+        "jp": "Add(1,2)=3、Add(3,4)=7。Add(3,7)=10。",
+        "jpResult": "10"
+    },
+    {
+        "id": "sub-008",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "0"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int GetZero() { return 0; }\nint x = GetZero();\nConsole.WriteLine(x);",
+        "pseudocode": "○GetZero()\n  return 0\n\nx ← GetZero()\nx を出力",
+        "choices": [
+            "0",
+            "コンパイルエラー",
+            "null",
+            "未定義"
+        ],
+        "answer": 0,
+        "jp": "int 型の副プログラムは 0 を返すこともできる。",
+        "jpResult": "0"
+    },
+    {
+        "id": "sub-009",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "引数",
+            "複数"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int Mul(int a, int b) { return a * b; }\nConsole.WriteLine(Mul(3, 4));",
+        "pseudocode": "○Mul(整数型: a, 整数型: b)\n  return a × b\n\nMul(3, 4) を出力",
+        "choices": [
+            "7",
+            "12",
+            "4",
+            "コンパイルエラー"
+        ],
+        "answer": 1,
+        "jp": "複数の引数を受け取る副プログラム。Mul(3,4)=12。",
+        "jpResult": "12"
+    },
+    {
+        "id": "sub-010",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "早期 return"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int Check(int n) { if (n <= 0) return 0; return n; }\nConsole.WriteLine(Check(5));",
+        "pseudocode": "○Check(整数型: n)\n  if (n ≦ 0)\n    return 0\n  endif\n  return n\n\nCheck(5) を出力",
+        "choices": [
+            "1",
+            "コンパイルエラー",
+            "5",
+            "0"
+        ],
+        "answer": 2,
+        "jp": "条件を満たさないので早期 return は実行されず、return n で 5 が返る。",
+        "jpResult": "5"
+    },
+    {
+        "id": "sub-011",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "早期 return"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int Check(int n) { if (n <= 0) return 0; return n; }\nConsole.WriteLine(Check(0));",
+        "pseudocode": "○Check(整数型: n)\n  if (n ≦ 0)\n    return 0\n  endif\n  return n\n\nCheck(0) を出力",
+        "choices": [
+            "コンパイルエラー",
+            "1",
+            "-1",
+            "0"
+        ],
+        "answer": 3,
+        "jp": "n<=0 が真なので早期 return 0 が実行される。",
+        "jpResult": "0"
+    },
+    {
+        "id": "sub-012",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "void"
+        ],
+        "difficulty": 3,
+        "question": "次のコードの結果はどれ？",
+        "code": "static void Say() { Console.WriteLine(\"Hi\"); }\nint x = Say();",
+        "pseudocode": "○Say()\n  \"Hi\" を出力\n\nx ← Say()  // 手続（戻り値なし）は代入できない。C#の void と同じ",
+        "choices": [
+            "コンパイルエラー",
+            "Hi",
+            "実行時エラー",
+            "0"
+        ],
+        "answer": 0,
+        "jp": "void は戻り値がない。void の戻り値を変数に代入しようとするとコンパイルエラー。",
+        "jpResult": "コンパイルエラー"
+    },
+    {
+        "id": "sub-013",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "再帰"
+        ],
+        "difficulty": 3,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int F(int n) { if (n <= 1) return 1; return n * F(n - 1); }\nConsole.WriteLine(F(4));",
+        "pseudocode": "○F(整数型: n)\n  if (n ≦ 1)\n    return 1\n  endif\n  return n × F(n － 1)\n\nF(4) を出力",
+        "choices": [
+            "12",
+            "24",
+            "スタックオーバーフロー",
+            "4"
+        ],
+        "answer": 1,
+        "jp": "再帰で階乗。F(4)=4×F(3)=4×3×F(2)=4×3×2×F(1)=4×3×2×1=24。",
+        "jpResult": "24"
+    },
+    {
+        "id": "sub-014",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "配列"
+        ],
+        "difficulty": 3,
+        "question": "次のコードの出力はどれ？",
+        "code": "static int[] Get() { return new int[] { 1, 2, 3 }; }\nint[] a = Get();\nConsole.WriteLine(a[1]);",
+        "pseudocode": "○Get()\n  return {1, 2, 3}\n\n整数型の配列: a ← Get()\na[2] を出力  // C#の a[1] に相当（擬似言語は1始まり）",
+        "choices": [
+            "コンパイルエラー",
+            "1",
+            "2",
+            "3"
+        ],
+        "answer": 2,
+        "jp": "副プログラムは配列も返せる。a[1] は2番目の要素で 2。",
+        "jpResult": "2"
+    },
+    {
+        "id": "sub-015",
+        "lang": "csharp",
+        "genre": "subprograms",
+        "topics": [
+            "戻り値",
+            "文字列"
+        ],
+        "difficulty": 2,
+        "question": "次のコードの出力はどれ？",
+        "code": "static string Greet() { return \"Hello\"; }\nstring s = Greet();\nConsole.WriteLine(s);",
+        "pseudocode": "○Greet()\n  return \"Hello\"\n\ns ← Greet()\ns を出力",
+        "choices": [
+            "空",
+            "null",
+            "コンパイルエラー",
+            "Hello"
+        ],
+        "answer": 3,
+        "jp": "string 型の副プログラムは文字列を返せる。",
+        "jpResult": "Hello"
+    }
 ]
