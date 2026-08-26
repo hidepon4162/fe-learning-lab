@@ -12,6 +12,7 @@ function timeLimitForCount(count) {
 const LS_KEY_BEGINNER = "fe_quiz_beginnerMode";
 const LS_KEY_SETTINGS = "fe_quiz_settings_v1";
 const LS_KEY_USER_PRESETS = "fe_quiz_user_presets_v1";
+const LS_KEY_CODEVIEW = "fe_quiz_codeview";
 
 // ★セッション保存（生徒ロック時のみ）
 const LS_KEY_SESSION = "fe_quiz_session_v1";
@@ -35,6 +36,7 @@ let lockHeartbeatHandle = null;
 let reviewChecked = false;
 let mainChecked = false; // ★メイン出題の採点済みフラグ
 let pendingMainLog = null; // ★メイン出題の採点結果を一時保持
+let pendingReviewLog = null;
 let answersLog = [];
 
 const quizEl = document.getElementById("quiz");
@@ -49,6 +51,8 @@ const beginnerToggleEl = document.getElementById("beginnerToggle");
 const setupPanelEl = document.getElementById("setupPanel");
 const startBtnEl = document.getElementById("startBtn");
 const countSelectEl = document.getElementById("countSelect");
+const btnCodeIpa = document.getElementById("btnCodeIpa");
+const btnCodeCsharp = document.getElementById("btnCodeCsharp");
 
 const langBoxEl = document.getElementById("langBox");
 const genreBoxEl = document.getElementById("genreBox");
@@ -127,6 +131,50 @@ let selectedFilter = {
 
 let lastPickedSet = [];
 
+function loadCodeview() {
+    try {
+        return Codeview.parseCodeview(localStorage.getItem(LS_KEY_CODEVIEW));
+    } catch {
+        return "ipa";
+    }
+}
+function saveCodeview(modeName) {
+    try { localStorage.setItem(LS_KEY_CODEVIEW, modeName); } catch { }
+}
+
+let codeview = loadCodeview();
+
+function syncCodeviewButtons() {
+    if (btnCodeIpa) btnCodeIpa.classList.toggle("active", codeview === "ipa");
+    if (btnCodeCsharp) btnCodeCsharp.classList.toggle("active", codeview === "csharp");
+}
+
+function applyCodeview(next) {
+    codeview = Codeview.parseCodeview(next);
+    saveCodeview(codeview);
+    syncCodeviewButtons();
+    redrawForCodeview();
+}
+
+function redrawForCodeview() {
+    if (!questions.length || current >= questions.length) return;
+    const sel = document.querySelector('input[name="choice"]:checked');
+    const chosen = sel ? Number(sel.value) : null;
+    if (mode === "main") {
+        if (mainChecked && pendingMainLog) showMainFeedback(pendingMainLog);
+        else showQuestion();
+    } else if (mode === "review") {
+        if (reviewChecked && pendingReviewLog) showReviewFeedback(pendingReviewLog);
+        else showQuestion();
+    } else {
+        return;
+    }
+    if (chosen != null && !Number.isNaN(chosen)) {
+        const radio = document.querySelector(`input[name="choice"][value="${chosen}"]`);
+        if (radio) radio.checked = true;
+    }
+}
+
 // --- 初心者モード（localStorage） ---
 let beginnerMode = loadBeginnerMode();
 beginnerToggleEl.checked = beginnerMode;
@@ -145,6 +193,9 @@ beginnerToggleEl.addEventListener("change", () => {
 
 nextBtn.onclick = onNextButton;
 startBtnEl.onclick = onStart;
+if (btnCodeIpa) btnCodeIpa.addEventListener("click", () => applyCodeview("ipa"));
+if (btnCodeCsharp) btnCodeCsharp.addEventListener("click", () => applyCodeview("csharp"));
+syncCodeviewButtons();
 
 // タブID（多重起動防止）
 const TAB_ID = (() => {
@@ -926,6 +977,7 @@ function applyFilter(list, filter) {
     }
 
     result = result.filter(q => filter.difficulties.includes(Number(q.difficulty ?? 1)));
+    result = Codeview.filterForCodeview(result, codeview);
     result = shuffle(result);
 
     if (filter.count !== "all") {
@@ -992,6 +1044,7 @@ function resetRunState(newTime) {
     reviewChecked = false;
     mainChecked = false;
     pendingMainLog = null;
+    pendingReviewLog = null;
 }
 
 // ----------------------------
@@ -1040,7 +1093,7 @@ function showQuestion() {
     progressEl.textContent = `${prefix} ${current + 1} / ${questions.length}`;
 
     const tags = [];
-    if (q.lang) tags.push(toLangLabel(q.lang));
+    tags.push(Codeview.displayLangOf(q, codeview));
     if (q.genre) {
         const cat = toCategoryLabel(q.genre);
         tags.push(cat ? `${cat} > ${toGenreLabel(q.genre)}` : toGenreLabel(q.genre));
@@ -1050,8 +1103,8 @@ function showQuestion() {
 
     difficultyEl.textContent = `難易度：${"★".repeat(q.difficulty ?? 1)}`;
 
-    const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
-    const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
+    const programBlock = buildProgramHtml(attemptProgramText(q));
+    const csharpOnlyNote = csharpOnlyNoteHtml(q);
     const jpStudy = getJpStudyText(q);
     const jpId = `jp-${mode}-${escapeHtmlAttr(q.id)}`;
     const jpToggleBtn = jpStudy
@@ -1062,8 +1115,8 @@ function showQuestion() {
         : "";
 
     let html = `<h3>${escapeHtml(q.question)}</h3>`;
-    html += codeBlock;
-    html += exprBlock;
+    html += csharpOnlyNote;
+    html += programBlock;
     html += jpToggleBtn;
     html += jpBlock;
 
@@ -1084,14 +1137,40 @@ function showQuestion() {
     wireToggleButtons();
 }
 
-function buildExplanationHtml(q) {
-    const pseudocodeText = autoPseudocode(q);
-    if (!pseudocodeText) return "";
+function attemptProgramText(q) {
+    if (Codeview.usesCsharpDisplay(q, codeview)) return Codeview.csharpSource(q);
+    return Codeview.stripPseudoComments(autoPseudocode(q));
+}
 
-    const pseudoCodeId = `pseudocode-any-${q.id}-${Math.random().toString(16).slice(2)}`;
+function otherProgramText(q) {
+    if (q?.csharpOnly) return "";
+    if (codeview === "csharp") return autoPseudocode(q);
+    return Codeview.csharpSource(q);
+}
+
+function buildProgramHtml(text) {
+    if (!String(text ?? "").trim()) return "";
+    return `<pre class="code"><code>${escapeHtml(text)}</code></pre>`;
+}
+
+function csharpOnlyNoteHtml(q) {
+    if (q?.csharpOnly && codeview === "ipa") {
+        return `<div class="small">この問は C# 専用</div>`;
+    }
+    return "";
+}
+
+function buildExplanationHtml(q) {
+    const other = otherProgramText(q);
+    if (!String(other ?? "").trim()) return "";
+
+    const otherId = `otherlang-${q.id}-${Math.random().toString(16).slice(2)}`;
+    const showCsharp = codeview === "ipa";
+    const showLabel = showCsharp ? "▶ C# で見る" : "▶ 擬似言語（試験形式）を表示";
+    const hideLabel = showCsharp ? "▼ C# を隠す" : "▼ 擬似言語を隠す";
     return `
-      <button class="toggleBtn" data-target="${pseudoCodeId}" data-show="▶ 擬似言語（試験形式）を表示" data-hide="▼ 擬似言語を隠す">▶ 擬似言語（試験形式）を表示</button>
-      <pre class="code" id="${pseudoCodeId}" style="display:none;"><code>${escapeHtml(pseudocodeText)}</code></pre>
+      <button class="toggleBtn" data-target="${otherId}" data-show="${showLabel}" data-hide="${hideLabel}">${showLabel}</button>
+      <pre class="code" id="${otherId}" style="display:none;"><code>${escapeHtml(other)}</code></pre>
     `;
 }
 
@@ -1165,6 +1244,7 @@ function checkCurrentReviewQuestion() {
     if (correct) score++;
     const log = { id: q.id, chosen, correct, correctIndex, questionObj: q };
     answersLog.push(log);
+    pendingReviewLog = log;
 
     showReviewFeedback(log);
 
@@ -1177,6 +1257,7 @@ function checkCurrentReviewQuestion() {
 function goNextReviewQuestion() {
     current++;
     reviewChecked = false;
+    pendingReviewLog = null;
 
     if (current < questions.length) {
         showQuestion();
@@ -1196,8 +1277,8 @@ function showReviewFeedback(log) {
     const chosenText = formatChoiceText(q, log.chosen);
     const correctText = formatChoiceText(q, log.correctIndex);
 
-    const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
-    const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
+    const codeBlock = buildProgramHtml(attemptProgramText(q));
+    const csharpOnlyNote = csharpOnlyNoteHtml(q);
     const jpStudy = getJpStudyText(q);
     const jpResult = getJpResultText(q);
     const jpBlock = (jpStudy || jpResult)
@@ -1211,15 +1292,15 @@ function showReviewFeedback(log) {
       <div class="result-badges">
         <span class="tag ${okNgClass}">${okNgText}</span>
         <span class="tag">#${escapeHtml(q.id)}</span>
-        <span class="tag">${escapeHtml(toLangLabel(q.lang ?? "-"))}</span>
+        <span class="tag">${escapeHtml(Codeview.displayLangOf(q, codeview))}</span>
         <span class="tag">${escapeHtml(buildGenreTag(q.genre))}</span>
         ${q.skill ? `<span class="tag">${escapeHtml(q.skill)}</span>` : ""}
         <span class="tag">${escapeHtml("★".repeat(q.difficulty ?? 1))}</span>
       </div>
 
       <div><b>問題：</b>${escapeHtml(q.question)}</div>
+      ${csharpOnlyNote}
       ${codeBlock}
-      ${exprBlock}
       ${jpBlock}
 
       <div><b>あなたの選択：</b>${escapeHtml(chosenText)}</div>
@@ -1247,8 +1328,8 @@ function showMainFeedback(log) {
     const chosenText = formatChoiceText(q, log.chosen);
     const correctText = formatChoiceText(q, log.correctIndex);
 
-    const codeBlock = q.code ? `<pre class="code"><code>${escapeHtml(q.code)}</code></pre>` : "";
-    const exprBlock = q.expr ? `<pre class="code"><code>${escapeHtml(q.expr)}</code></pre>` : "";
+    const codeBlock = buildProgramHtml(attemptProgramText(q));
+    const csharpOnlyNote = csharpOnlyNoteHtml(q);
     const jpStudy = getJpStudyText(q);
     const jpResult = getJpResultText(q);
     const jpBlock = (beginnerMode && (jpStudy || jpResult))
@@ -1262,15 +1343,15 @@ function showMainFeedback(log) {
       <div class="result-badges">
         <span class="tag ${okNgClass}">${okNgText}</span>
         <span class="tag">#${escapeHtml(q.id)}</span>
-        <span class="tag">${escapeHtml(toLangLabel(q.lang ?? "-"))}</span>
+        <span class="tag">${escapeHtml(Codeview.displayLangOf(q, codeview))}</span>
         <span class="tag">${escapeHtml(buildGenreTag(q.genre))}</span>
         ${q.skill ? `<span class="tag">${escapeHtml(q.skill)}</span>` : ""}
         <span class="tag">${escapeHtml("★".repeat(q.difficulty ?? 1))}</span>
       </div>
 
       <div><b>問題：</b>${escapeHtml(q.question)}</div>
+      ${csharpOnlyNote}
       ${codeBlock}
-      ${exprBlock}
       ${jpBlock}
 
       <div><b>あなたの選択：</b>${escapeHtml(chosenText)}</div>
@@ -1363,6 +1444,7 @@ function finishReview(reason) {
 }
 
 function showResultSummary(title, reason, canOfferReview) {
+    mode = "idle";
     topicsEl.textContent = "カテゴリ：-";
     difficultyEl.textContent = "難易度：-";
 

@@ -131,6 +131,7 @@
     {
         "id": "cond-007",
         "lang": "csharp",
+        "csharpOnly": true,
         "genre": "conditions",
         "topics": [
             "短絡評価"
@@ -152,6 +153,7 @@
     {
         "id": "cond-008",
         "lang": "csharp",
+        "csharpOnly": true,
         "genre": "conditions",
         "topics": [
             "短絡評価"
@@ -322,6 +324,7 @@
     {
         "id": "cond-016",
         "lang": "csharp",
+        "csharpOnly": true,
         "genre": "conditions",
         "topics": [
             "短絡評価"
@@ -385,6 +388,7 @@
     {
         "id": "cond-019",
         "lang": "csharp",
+        "csharpOnly": true,
         "genre": "conditions",
         "topics": [
             "型チェック"

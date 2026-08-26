@@ -86,6 +86,12 @@ if (starConditions < 10) {
     errors.push(`初級プリセット用の条件式★が ${starConditions} 問しかありません（必要: 10問以上）。`);
 }
 
+const csharpOnlyExpected = ["cond-007", "cond-008", "cond-016", "cond-019"];
+const csharpOnlyGot = questions.filter((q) => q.csharpOnly === true).map((q) => q.id).sort();
+if (csharpOnlyGot.join(",") !== csharpOnlyExpected.slice().sort().join(",")) {
+    errors.push(`csharpOnly の対象が違います: 実測=${csharpOnlyGot.join("/") || "(なし)"} 期待=${csharpOnlyExpected.join("/")}`);
+}
+
 if (errors.length) {
     console.error(`FAIL (${errors.length}件)`);
     for (const e of errors) console.error(`- ${e}`);

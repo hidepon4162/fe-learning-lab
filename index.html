@@ -408,6 +408,10 @@
                     <span id="topics" class="pill">カテゴリ：-</span>
                     <span id="difficulty" class="pill">難易度：-</span>
                 </div>
+                <div class="seg" role="group" aria-label="プログラム言語">
+                    <button id="btnCodeIpa" type="button" class="active">擬似言語</button>
+                    <button id="btnCodeCsharp" type="button">C#</button>
+                </div>
                 <div class="seg" role="group" aria-label="配色">
                     <button id="btnThemeNight" type="button" class="active">夜間</button>
                     <button id="btnThemeClassroom" type="button">教室</button>
@@ -563,6 +567,7 @@
             applyTheme(document.documentElement.getAttribute("data-theme"));
         })();
     </script>
+    <script src="codeview.js"></script>
     <script src="quiz.js"></script>
 </body>
 
